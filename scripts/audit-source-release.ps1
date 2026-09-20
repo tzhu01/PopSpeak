@@ -132,6 +132,7 @@ function Add-PathFindings {
         [string]$Source,
 
         [Parameter(Mandatory)]
+        [AllowEmptyCollection()]
         [string[]]$Paths
     )
 
@@ -192,6 +193,7 @@ function Invoke-GitLiteralGrep {
 function Add-UntrackedContentFindings {
     param(
         [Parameter(Mandatory)]
+        [AllowEmptyCollection()]
         [string[]]$Paths,
 
         [Parameter(Mandatory)]
