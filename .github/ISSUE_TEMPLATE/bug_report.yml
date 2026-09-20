@@ -1,0 +1,83 @@
+name: Bug Report
+description: Report a bug to help us improve PopSpeak
+labels: ['bug']
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of the bug.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: Minimal steps to reproduce the behavior.
+      placeholder: |
+        1. Go to '...'
+        2. Click on '...'
+        3. See error
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: PopSpeak Version
+      placeholder: e.g. v0.1.0
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating System
+      options:
+        - Windows 11
+        - Windows 10
+        - Other Windows
+    validations:
+      required: true
+  - type: dropdown
+    id: stt_provider
+    attributes:
+      label: Speech recognition model / provider
+      description: Select the model or cloud connection that was active when the problem occurred.
+      options:
+        - SenseVoice Small (local CPU)
+        - Fun-ASR-Nano (local CPU)
+        - Whisper Tiny (local CPU)
+        - Whisper Base (local CPU)
+        - Whisper Small (local CPU)
+        - Whisper Large v3 Turbo (local CPU)
+        - Qwen3-ASR 1.7B (local CPU)
+        - Cohere Transcribe 03-2026 (local CPU)
+        - Nemotron 3.5 ASR Streaming 0.6B (local CPU)
+        - Parakeet Unified EN 0.6B (local CPU)
+        - Doubao SeedASR 2.0 (cloud, own account)
+        - Custom cloud - ByteDance
+        - Custom cloud - Alibaba Cloud
+        - Custom cloud - Tencent Cloud
+        - Custom cloud - iFlytek
+        - Custom cloud - Baidu
+        - Custom Whisper-compatible endpoint
+        - Legacy cloud provider
+        - Other / not sure
+        - N/A
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs / Screenshots
+      description: Paste relevant log output or attach screenshots.
+      render: shell

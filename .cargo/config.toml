@@ -1,0 +1,13 @@
+[build]
+jobs = 2
+
+[env]
+# Prepared and SHA-256 verified by scripts/fetch-sensevoice.ps1 before Cargo runs.
+# This also prevents dependency build scripts from downloading native code implicitly.
+SHERPA_ONNX_LIB_DIR = { value = "src-tauri/binaries", relative = true }
+# Portable CPU-only native GGUF ASR: no build-machine-only AVX instructions,
+# no external GPU/OpenMP runtime, and UTF-8 source decoding on Chinese Windows.
+TRANSCRIBE_CMAKE_ARGS = '-DTRANSCRIBE_X86_CONSERVATIVE=ON -DCMAKE_C_FLAGS=/utf-8 -DCMAKE_CXX_FLAGS=/utf-8'
+
+[target.x86_64-pc-windows-msvc]
+rustflags = ["-C", "link-args=/STACK:16777216"]

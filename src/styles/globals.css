@@ -1,0 +1,1052 @@
+@import 'tailwindcss';
+
+@theme {
+  /* Chinese Voice Seal — rice paper, ink and vermilion */
+  --color-bg-primary: #f7f1e7;
+  --color-bg-secondary: #efe5d8;
+  --color-bg-tertiary: #e4d6c6;
+  --color-bg-elevated: #fff9f0;
+
+  --color-text-primary: #172033;
+  --color-text-secondary: #596174;
+  --color-text-tertiary: #8b887f;
+
+  --color-accent: #e64b3c;
+  --color-accent-hover: #c93c30;
+  --color-accent-light: #fce4db;
+
+  --color-success: #68866c;
+  --color-warning: #d9903d;
+  --color-error: #c83b32;
+
+  --color-border: rgba(23, 32, 51, 0.1);
+  --color-border-focus: #e64b3c;
+
+  --color-jelly-primary: rgba(230, 75, 60, 0.18);
+  --color-jelly-glow: rgba(230, 75, 60, 0.24);
+
+  /* Font */
+  --font-sans:
+    'Segoe UI Variable', 'Microsoft YaHei UI', 'Noto Sans SC', system-ui, -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'SF Mono', 'Fira Code', 'JetBrains Mono', monospace;
+
+  /* Font sizes */
+  --text-caption: 11px;
+  --text-footnote: 13px;
+  --text-body: 15px;
+  --text-headline: 17px;
+  --text-title: 22px;
+
+  /* Border radius */
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --radius-full: 9999px;
+
+  /* Shadows - neutral */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 8px 28px rgba(0, 0, 0, 0.1), 0 4px 8px rgba(0, 0, 0, 0.06);
+  --shadow-float: 0 16px 48px rgba(0, 0, 0, 0.12), 0 8px 16px rgba(0, 0, 0, 0.08);
+
+  /* Easing */
+  --ease-out: cubic-bezier(0.33, 1, 0.68, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* Base styles */
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  font-family: var(--font-sans);
+  font-weight: 450;
+  letter-spacing: -0.01em;
+  background: transparent;
+  color: var(--color-text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
+  user-select: none;
+}
+
+/* ─── Dark Mode ─── */
+.dark {
+  --color-bg-primary: #141923;
+  --color-bg-secondary: #1d2430;
+  --color-bg-tertiary: #29313f;
+  --color-bg-elevated: #202734;
+
+  --color-text-primary: #f0f0f0;
+  --color-text-secondary: #aeb4c0;
+  --color-text-tertiary: #7f8795;
+
+  --color-accent-light: #492827;
+
+  --color-border: rgba(255, 255, 255, 0.08);
+
+  --color-jelly-primary: rgba(230, 75, 60, 0.25);
+  --color-jelly-glow: rgba(230, 75, 60, 0.35);
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.15);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.25), 0 2px 4px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 8px 28px rgba(0, 0, 0, 0.3), 0 4px 8px rgba(0, 0, 0, 0.2);
+  --shadow-float: 0 16px 48px rgba(0, 0, 0, 0.35), 0 8px 16px rgba(0, 0, 0, 0.25);
+}
+
+/* Drag region */
+[data-tauri-drag-region] {
+  cursor: move;
+}
+
+/* ─── Dark Jelly Overrides ─── */
+.dark .jelly-surface {
+  background: linear-gradient(145deg, #2a2a2a 0%, #222222 50%, #1c1c1c 100%);
+  box-shadow:
+    inset 0 2px 8px rgba(255, 255, 255, 0.04),
+    inset 0 -2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.dark .jelly-card {
+  background: linear-gradient(155deg, #2e2e2e 0%, #272727 50%, #212121 100%);
+  box-shadow:
+    inset 0 1.5px 4px rgba(255, 255, 255, 0.04),
+    0 4px 16px rgba(0, 0, 0, 0.3);
+}
+.dark .jelly-card::before {
+  background: radial-gradient(
+    ellipse at 30% 20%,
+    rgba(255, 255, 255, 0.04) 0%,
+    rgba(255, 255, 255, 0.01) 40%,
+    transparent 70%
+  );
+}
+.dark .jelly-card:hover {
+  box-shadow:
+    inset 0 1.5px 4px rgba(255, 255, 255, 0.06),
+    0 6px 24px rgba(0, 0, 0, 0.35);
+}
+
+.dark .jelly-btn {
+  background: linear-gradient(155deg, #333333 0%, #2a2a2a 50%, #222222 100%);
+  box-shadow:
+    inset 0 1.5px 3px rgba(255, 255, 255, 0.05),
+    0 3px 10px rgba(0, 0, 0, 0.25);
+}
+.dark .jelly-btn::before {
+  background: radial-gradient(
+    ellipse at 30% 20%,
+    rgba(255, 255, 255, 0.04) 0%,
+    rgba(255, 255, 255, 0.01) 40%,
+    transparent 70%
+  );
+}
+.dark .jelly-btn:hover {
+  box-shadow:
+    inset 0 1.5px 3px rgba(255, 255, 255, 0.07),
+    0 6px 18px rgba(0, 0, 0, 0.3);
+}
+
+.dark .jelly-btn-accent {
+  box-shadow:
+    inset 0 2px 3px rgba(255, 255, 255, 0.15),
+    0 3px 12px rgba(0, 0, 0, 0.3);
+}
+.dark .jelly-btn-accent:hover {
+  box-shadow:
+    inset 0 2px 3px rgba(255, 255, 255, 0.15),
+    0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.dark .jelly-surface-flat {
+  background: linear-gradient(180deg, #262626 0%, #202020 50%, #1c1c1c 100%);
+  box-shadow:
+    inset 2px 0 8px rgba(255, 255, 255, 0.03),
+    inset -2px 0 8px rgba(0, 0, 0, 0.2);
+}
+
+.dark .jelly-capsule {
+  background: linear-gradient(160deg, #2e2e2e 0%, #262626 50%, #1e1e1e 100%);
+  box-shadow:
+    inset 0 2px 6px rgba(255, 255, 255, 0.04),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.3),
+    0 4px 16px rgba(0, 0, 0, 0.3);
+}
+.dark .jelly-capsule::before {
+  background: radial-gradient(
+    ellipse at 35% 25%,
+    rgba(255, 255, 255, 0.04) 0%,
+    rgba(255, 255, 255, 0.01) 40%,
+    transparent 70%
+  );
+}
+.dark .jelly-capsule::after {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.2), transparent);
+}
+
+.dark .jelly-capsule-error {
+  background: linear-gradient(160deg, #4a2020 0%, #3a1818 50%, #2e1212 100%);
+  box-shadow:
+    inset 0 2px 6px rgba(255, 255, 255, 0.04),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.3),
+    0 4px 16px rgba(0, 0, 0, 0.3);
+}
+.dark .jelly-capsule-error::before {
+  background: radial-gradient(
+    ellipse at 40% 30%,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0.01) 40%,
+    transparent 70%
+  );
+}
+
+.dark .capsule-shimmer::after {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.06) 40%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0.06) 60%,
+    transparent 100%
+  );
+}
+
+.dark .capsule-stage-progress {
+  background: rgba(255, 255, 255, 0.04);
+}
+.dark .capsule-stage-progress-fill {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.8));
+}
+
+/* ─── Jelly Surface — rich gel with strong inner glow ─── */
+.jelly-surface {
+  position: relative;
+  background: linear-gradient(145deg, #f6f6f6 0%, #eeeeee 50%, #e6e6e6 100%);
+  box-shadow:
+    inset 0 2px 8px rgba(255, 255, 255, 0.9),
+    inset 0 -2px 8px rgba(0, 0, 0, 0.06),
+    0 4px 20px rgba(0, 0, 0, 0.08),
+    0 10px 40px rgba(0, 0, 0, 0.04);
+  border: none;
+  border-radius: 22px;
+  transition:
+    transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.3s ease;
+  overflow: hidden;
+}
+
+/* ─── Jelly Card — 3D gel panel with specular highlight ─── */
+.jelly-card {
+  position: relative;
+  background: linear-gradient(155deg, #ededed 0%, #e4e4e4 50%, #dadada 100%);
+  border: none;
+  border-radius: 20px;
+  box-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.07),
+    0 10px 40px rgba(0, 0, 0, 0.03),
+    inset 0 2px 6px rgba(255, 255, 255, 0.8),
+    inset 0 -2px 6px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  transition:
+    transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.3s ease;
+}
+/* Card specular highlight band */
+.jelly-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 40%;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.5) 0%,
+    rgba(255, 255, 255, 0.1) 60%,
+    transparent 100%
+  );
+  border-radius: 20px 20px 0 0;
+  pointer-events: none;
+  z-index: 0;
+}
+.jelly-card:hover {
+  transform: scale(1.02) translateY(-2px);
+  box-shadow:
+    0 8px 28px rgba(0, 0, 0, 0.1),
+    0 16px 50px rgba(0, 0, 0, 0.05),
+    inset 0 2px 6px rgba(255, 255, 255, 0.8),
+    inset 0 -2px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* ─── Jelly Button — tactile 3D gel button ─── */
+.jelly-btn {
+  position: relative;
+  background: linear-gradient(155deg, #ececec 0%, #e2e2e2 50%, #d8d8d8 100%);
+  box-shadow:
+    0 3px 12px rgba(0, 0, 0, 0.07),
+    0 6px 24px rgba(0, 0, 0, 0.03),
+    inset 0 2px 4px rgba(255, 255, 255, 0.8),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.05);
+  border: none;
+  border-radius: 14px;
+  overflow: hidden;
+  transition:
+    transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.25s ease;
+}
+.jelly-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.45) 0%, transparent 100%);
+  border-radius: 14px 14px 0 0;
+  pointer-events: none;
+}
+.jelly-btn:hover {
+  transform: scale(1.04);
+  box-shadow:
+    0 6px 20px rgba(0, 0, 0, 0.1),
+    0 10px 36px rgba(0, 0, 0, 0.04),
+    inset 0 2px 4px rgba(255, 255, 255, 0.8),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.06);
+}
+.jelly-btn:active {
+  transform: scaleX(1.06) scaleY(0.94);
+}
+
+/* ─── Jelly Nav Active — accent gel indicator ─── */
+.jelly-nav-active {
+  background: linear-gradient(145deg, #2abba7 0%, #22a08e 100%);
+  box-shadow:
+    inset 0 1px 4px rgba(255, 255, 255, 0.3),
+    inset 0 -1px 4px rgba(0, 0, 0, 0.15),
+    0 2px 10px rgba(42, 187, 167, 0.3);
+  border-radius: 12px;
+  color: white !important;
+}
+
+/* ─── Jelly Capsule — minimal white/grey gel orb ─── */
+.jelly-capsule {
+  position: relative;
+  background: linear-gradient(160deg, #fafafa 0%, #f0f0f0 50%, #e8e8e8 100%);
+  border-radius: 9999px;
+  border: none;
+  box-shadow:
+    inset 0 1px 4px rgba(255, 255, 255, 0.8),
+    inset 0 -1px 3px rgba(0, 0, 0, 0.05),
+    0 2px 8px rgba(0, 0, 0, 0.08),
+    0 4px 16px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+}
+/* Capsule specular highlight — subtle top-left reflection */
+.jelly-capsule::before {
+  content: '';
+  position: absolute;
+  top: 8%;
+  left: 12%;
+  width: 55%;
+  height: 40%;
+  background: radial-gradient(
+    ellipse at 40% 30%,
+    rgba(255, 255, 255, 0.15) 0%,
+    rgba(255, 255, 255, 0.05) 40%,
+    transparent 70%
+  );
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+}
+/* Capsule bottom depth gradient */
+.jelly-capsule::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.08), transparent);
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ─── Jelly Capsule — recording active (dark grey/black gel) ─── */
+.jelly-capsule-active {
+  position: relative;
+  background: linear-gradient(160deg, #3a3a3a 0%, #2a2a2a 50%, #1a1a1a 100%);
+  border-radius: 9999px;
+  border: none;
+  box-shadow:
+    inset 0 1px 4px rgba(255, 255, 255, 0.12),
+    inset 0 -1px 3px rgba(0, 0, 0, 0.2),
+    0 2px 8px rgba(0, 0, 0, 0.15),
+    0 4px 16px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+.jelly-capsule-active::before {
+  content: '';
+  position: absolute;
+  top: 8%;
+  left: 12%;
+  width: 55%;
+  height: 40%;
+  background: radial-gradient(
+    ellipse at 40% 30%,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.03) 40%,
+    transparent 70%
+  );
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+}
+.jelly-capsule-active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.15), transparent);
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ─── Jelly Capsule — error state (mid-grey gel) ─── */
+.jelly-capsule-error {
+  position: relative;
+  background: linear-gradient(160deg, #666 0%, #555 50%, #444 100%);
+  border-radius: 9999px;
+  border: none;
+  box-shadow:
+    inset 0 1px 4px rgba(255, 255, 255, 0.1),
+    inset 0 -1px 3px rgba(0, 0, 0, 0.15),
+    0 2px 8px rgba(0, 0, 0, 0.12),
+    0 4px 16px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+.jelly-capsule-error::before {
+  content: '';
+  position: absolute;
+  top: 8%;
+  left: 12%;
+  width: 55%;
+  height: 40%;
+  background: radial-gradient(
+    ellipse at 40% 30%,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.02) 40%,
+    transparent 70%
+  );
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+}
+.jelly-capsule-error::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.12), transparent);
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ─── Jelly Surface Flat — no border-radius, for sidebars ─── */
+.jelly-surface-flat {
+  background: linear-gradient(180deg, #f0f0f0 0%, #e8e8e8 50%, #e0e0e0 100%);
+  box-shadow:
+    inset 2px 0 8px rgba(255, 255, 255, 0.5),
+    inset -2px 0 8px rgba(0, 0, 0, 0.04);
+  border: none;
+  transition: box-shadow 0.3s ease;
+}
+
+/* ─── Jelly Button Accent — for primary CTA buttons ─── */
+.jelly-btn-accent {
+  box-shadow:
+    inset 0 2px 3px rgba(255, 255, 255, 0.3),
+    0 3px 12px rgba(0, 0, 0, 0.12);
+  border: none;
+  border-radius: 9999px;
+  transition:
+    transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.25s ease;
+}
+.jelly-btn-accent:hover {
+  transform: scale(1.04);
+  box-shadow:
+    inset 0 2px 3px rgba(255, 255, 255, 0.3),
+    0 6px 20px rgba(0, 0, 0, 0.18);
+}
+.jelly-btn-accent:active {
+  transform: scaleX(1.06) scaleY(0.94);
+}
+
+/* ─── Shimmer sweep — left-to-right loading bar ─── */
+@keyframes shimmer-sweep {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+.capsule-shimmer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 2;
+}
+.capsule-shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.12) 40%,
+    rgba(255, 255, 255, 0.2) 50%,
+    rgba(255, 255, 255, 0.12) 60%,
+    transparent 100%
+  );
+  animation: shimmer-sweep 1.5s ease-in-out infinite;
+}
+
+/* ─── Pipeline stage progress — recognition → polish → output ─── */
+.capsule-stage-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  overflow: hidden;
+  border-radius: 0 0 9999px 9999px;
+  pointer-events: none;
+  z-index: 3;
+  background: rgba(255, 255, 255, 0.08);
+}
+.capsule-stage-progress-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.95));
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.35);
+}
+
+/* ─── Jelly Keyframes ─── */
+@keyframes jelly-wobble {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scaleX(1.05) scaleY(0.95);
+  }
+  50% {
+    transform: scaleX(0.97) scaleY(1.03);
+  }
+  75% {
+    transform: scaleX(1.02) scaleY(0.98);
+  }
+}
+
+@keyframes jelly-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.04) scaleX(1.02);
+  }
+}
+
+/* ─── Reduced Motion ─── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .jelly-card:hover,
+  .jelly-btn:hover,
+  .jelly-btn:active,
+  .jelly-btn-accent:hover,
+  .jelly-btn-accent:active {
+    transform: none !important;
+  }
+}
+
+/* macOS-style scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-text-tertiary);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-secondary);
+}
+
+/* ─── Chinese Voice Seal brand surfaces ─── */
+.brand-shell {
+  background:
+    radial-gradient(circle at 88% 5%, rgba(242, 179, 109, 0.14), transparent 30%),
+    linear-gradient(135deg, #f9f4eb 0%, var(--color-bg-primary) 64%, #f2e8db 100%);
+}
+
+.brand-main {
+  position: relative;
+  background:
+    linear-gradient(rgba(23, 32, 51, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(23, 32, 51, 0.025) 1px, transparent 1px);
+  background-size: 30px 30px;
+}
+
+.brand-sidebar {
+  background: rgba(244, 235, 223, 0.92) !important;
+  box-shadow: 12px 0 40px rgba(91, 63, 41, 0.045) !important;
+  backdrop-filter: blur(18px);
+}
+
+.brand-wordmark,
+.brand-display {
+  font-family: ui-serif, Georgia, 'Songti SC', SimSun, serif;
+}
+
+.brand-kicker {
+  color: var(--color-accent);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.brand-hero {
+  isolation: isolate;
+  background:
+    radial-gradient(circle at 92% 4%, rgba(230, 75, 60, 0.12), transparent 28%),
+    linear-gradient(135deg, rgba(255, 250, 242, 0.98), rgba(247, 236, 221, 0.95)) !important;
+}
+
+.brand-hero::after {
+  content: '';
+  position: absolute;
+  right: 28px;
+  bottom: -38px;
+  width: 148px;
+  height: 148px;
+  border: 1px solid rgba(230, 75, 60, 0.12);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 20px rgba(230, 75, 60, 0.035),
+    0 0 0 42px rgba(230, 75, 60, 0.025);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.brand-rule {
+  height: 1px;
+  background: linear-gradient(90deg, var(--color-accent), rgba(230, 75, 60, 0));
+}
+
+.jelly-surface,
+.jelly-card,
+.jelly-btn,
+.jelly-surface-flat {
+  border: 1px solid var(--color-border);
+}
+
+.jelly-surface {
+  background: rgba(255, 249, 240, 0.94);
+  box-shadow: 0 18px 50px rgba(91, 63, 41, 0.08);
+}
+
+.jelly-card {
+  background: rgba(255, 250, 242, 0.94);
+  border-radius: 18px;
+  box-shadow:
+    0 12px 32px rgba(91, 63, 41, 0.065),
+    inset 0 1px 0 rgba(255, 255, 255, 0.72);
+}
+
+.jelly-card::before {
+  height: 1px;
+  background: linear-gradient(90deg, rgba(230, 75, 60, 0.5), transparent 62%);
+  border-radius: inherit;
+}
+
+.jelly-card:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 16px 38px rgba(91, 63, 41, 0.085),
+    inset 0 1px 0 rgba(255, 255, 255, 0.78);
+}
+
+.jelly-btn {
+  background: rgba(255, 250, 242, 0.9);
+  border-radius: 12px;
+  box-shadow:
+    0 5px 16px rgba(91, 63, 41, 0.055),
+    inset 0 1px 0 rgba(255, 255, 255, 0.72);
+}
+
+.jelly-btn::before {
+  display: none;
+}
+
+.jelly-btn:hover {
+  box-shadow:
+    0 9px 22px rgba(91, 63, 41, 0.09),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.jelly-nav-active {
+  background: linear-gradient(135deg, #ef5b4d, #d84234);
+  box-shadow:
+    0 7px 18px rgba(200, 59, 50, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  border-radius: 10px;
+}
+
+.jelly-btn-accent {
+  background: linear-gradient(135deg, #ec5b4d, #d74234);
+  box-shadow: 0 7px 18px rgba(200, 59, 50, 0.2);
+}
+
+/* Signal Orbit capsule — visual only; component states and progress values stay intact. */
+.signal-capsule {
+  border: 1px solid rgba(113, 205, 255, 0.24) !important;
+  color: #67e8f9;
+  transform: translateZ(0);
+}
+
+.jelly-capsule,
+.jelly-capsule-active {
+  background:
+    radial-gradient(circle at 30% 20%, rgba(77, 157, 255, 0.24), transparent 38%),
+    linear-gradient(150deg, #202a3b 0%, #111827 52%, #090f1b 100%);
+  border-radius: 9999px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.34),
+    0 5px 18px rgba(4, 10, 24, 0.3),
+    0 0 20px rgba(48, 160, 255, 0.12);
+}
+
+.jelly-capsule-active {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 5px 18px rgba(4, 10, 24, 0.38),
+    0 0 23px rgba(55, 190, 255, 0.2);
+}
+
+.jelly-capsule::before,
+.jelly-capsule-active::before {
+  background: radial-gradient(
+    ellipse at 35% 20%,
+    rgba(178, 229, 255, 0.22),
+    rgba(75, 166, 255, 0.05) 44%,
+    transparent 72%
+  );
+}
+
+.jelly-capsule::after,
+.jelly-capsule-active::after {
+  background: linear-gradient(to top, rgba(0, 4, 14, 0.26), transparent);
+}
+
+.jelly-capsule-error {
+  background: linear-gradient(150deg, #4b252b 0%, #29151d 58%, #160e16 100%);
+  border: 1px solid rgba(255, 115, 125, 0.3) !important;
+  box-shadow:
+    0 5px 18px rgba(20, 4, 8, 0.35),
+    0 0 18px rgba(255, 76, 94, 0.16);
+}
+
+.signal-orbit-mark {
+  color: #79e7ff;
+  filter: drop-shadow(0 0 5px rgba(81, 193, 255, 0.8));
+}
+
+.signal-menu {
+  background: rgba(12, 18, 31, 0.96);
+  border: 1px solid rgba(103, 232, 249, 0.2);
+  box-shadow:
+    0 18px 46px rgba(3, 8, 20, 0.44),
+    0 0 22px rgba(56, 189, 248, 0.12);
+  backdrop-filter: blur(18px);
+  overflow: hidden;
+}
+
+.signal-menu .border-border {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.capsule-shimmer::after {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(56, 189, 248, 0.03) 35%,
+    rgba(103, 232, 249, 0.2) 50%,
+    rgba(56, 189, 248, 0.03) 65%,
+    transparent 100%
+  );
+}
+
+.capsule-stage-progress {
+  height: 2px;
+  background: rgba(125, 211, 252, 0.1);
+}
+
+.capsule-stage-progress-fill,
+.dark .capsule-stage-progress-fill {
+  background: linear-gradient(90deg, #3b82f6, #67e8f9);
+  box-shadow: 0 0 7px rgba(103, 232, 249, 0.8);
+}
+
+.dark .brand-shell {
+  background:
+    radial-gradient(circle at 88% 5%, rgba(230, 75, 60, 0.09), transparent 30%),
+    linear-gradient(135deg, #151b25 0%, #111721 100%);
+}
+
+.dark .brand-sidebar,
+.dark .jelly-surface-flat {
+  background: rgba(24, 30, 41, 0.96) !important;
+}
+
+.dark .jelly-card,
+.dark .jelly-btn,
+.dark .jelly-surface {
+  background: rgba(31, 38, 51, 0.94);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.2);
+}
+
+.dark .brand-hero {
+  background:
+    radial-gradient(circle at 92% 4%, rgba(230, 75, 60, 0.12), transparent 28%),
+    linear-gradient(135deg, #242a35, #1b222e) !important;
+}
+
+/* PopSpeak 0.4: quiet, flat surfaces with one consistent title-bar colour. */
+.brand-shell,
+.brand-main,
+.dark .brand-shell {
+  background: var(--color-bg-primary);
+}
+
+.brand-sidebar,
+.dark .brand-sidebar {
+  background: var(--color-bg-elevated) !important;
+  box-shadow: none !important;
+  backdrop-filter: none;
+}
+
+.brand-wordmark,
+.brand-display {
+  font-family: var(--font-sans);
+}
+
+.brand-kicker {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+}
+
+.brand-hero,
+.dark .brand-hero {
+  background: var(--color-bg-elevated) !important;
+}
+
+.brand-hero::after,
+.jelly-card::before {
+  display: none;
+}
+
+.jelly-surface,
+.jelly-card,
+.jelly-btn,
+.dark .jelly-card,
+.dark .jelly-btn,
+.dark .jelly-surface {
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 3px 12px rgba(23, 32, 51, 0.035);
+}
+
+.jelly-card:hover,
+.jelly-btn:hover {
+  transform: none;
+  box-shadow: 0 5px 16px rgba(23, 32, 51, 0.055);
+}
+
+.jelly-nav-active {
+  background: var(--color-accent-light);
+  border-radius: 10px;
+  box-shadow: none;
+}
+
+.app-titlebar {
+  background: var(--color-bg-elevated);
+  color: var(--color-text-primary);
+}
+
+.app-titlebar-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-accent);
+}
+
+.app-window-control {
+  display: flex;
+  width: 38px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: transparent;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+
+.app-window-control:hover {
+  background: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+}
+
+.app-window-close:hover {
+  background: var(--color-accent);
+  color: white;
+}
+
+.home-hotkey {
+  background: var(--color-text-primary);
+  color: var(--color-bg-elevated);
+}
+
+.home-step,
+.model-choice {
+  background: var(--color-bg-elevated);
+}
+
+.model-choice:hover {
+  border-color: var(--color-accent);
+  background: var(--color-bg-elevated);
+}
+
+.model-choice-active {
+  border-color: var(--color-accent) !important;
+  box-shadow: 0 0 0 2px rgba(230, 75, 60, 0.09);
+}
+
+.model-choice-icon {
+  background: var(--color-bg-secondary);
+  color: var(--color-accent);
+}
+
+.signal-capsule {
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+}
+
+.jelly-capsule,
+.jelly-capsule-active,
+.dark .jelly-capsule,
+.dark .jelly-capsule-active {
+  border-radius: 9999px;
+  background: #222936;
+  box-shadow: 0 4px 14px rgba(18, 28, 40, 0.22);
+}
+
+.jelly-capsule,
+.dark .jelly-capsule {
+  background: var(--color-accent);
+}
+
+.jelly-capsule::before,
+.jelly-capsule::after,
+.jelly-capsule-active::before,
+.jelly-capsule-active::after,
+.jelly-capsule-error::before,
+.jelly-capsule-error::after {
+  display: none;
+}
+
+.signal-orbit-mark {
+  color: white;
+  filter: none;
+}
+
+.signal-menu {
+  background: #222936;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 12px 30px rgba(18, 28, 40, 0.25);
+  backdrop-filter: none;
+}
+
+.capsule-shimmer::after {
+  display: none;
+}
+
+.capsule-stage-progress-fill,
+.dark .capsule-stage-progress-fill {
+  background: #f27a6d;
+  box-shadow: none;
+}
+
+.settings-sidebar,
+.dark .settings-sidebar {
+  background: var(--color-bg-elevated) !important;
+  box-shadow: none;
+}
+
+.dark .jelly-card:hover,
+.dark .jelly-btn:hover {
+  background: var(--color-bg-elevated);
+  box-shadow: 0 5px 16px rgba(0, 0, 0, 0.12);
+}
+
+@media (max-width: 1100px) {
+  .settings-layout {
+    flex-direction: column;
+  }
+  .settings-sidebar {
+    width: 100%;
+    height: auto;
+    flex-direction: row;
+    overflow-x: auto;
+    padding: 8px;
+    border-radius: 12px;
+  }
+  .settings-sidebar-heading {
+    display: none;
+  }
+  .settings-sidebar > button {
+    width: auto;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "name": "popspeak",
+  "private": true,
+  "version": "0.4.2",
+  "type": "module",
+  "description": "Open-source, offline-first voice input assistant for Windows",
+  "keywords": [
+    "speech-to-text",
+    "stt",
+    "llm",
+    "tauri",
+    "desktop",
+    "voice-input"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tzhu01/PopSpeak"
+  },
+  "homepage": "https://popspeak-voice.ambitiousgoebel0126.chatgpt.site",
+  "bugs": {
+    "url": "https://github.com/tzhu01/PopSpeak/issues"
+  },
+  "author": "PopSpeak Contributors",
+  "license": "MIT",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "tauri": "tauri",
+    "lint": "eslint src/",
+    "format": "prettier --write src/",
+    "format:check": "prettier --check src/",
+    "audit:source-release": "pwsh -NoProfile -File ./scripts/audit-source-release.ps1",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "~2.10.0",
+    "@tauri-apps/plugin-clipboard-manager": "^2.2",
+    "@tauri-apps/plugin-deep-link": "^2.2",
+    "@tauri-apps/plugin-dialog": "^2.7.1",
+    "@tauri-apps/plugin-global-shortcut": "^2.2",
+    "@tauri-apps/plugin-opener": "^2.2",
+    "@tauri-apps/plugin-sql": "^2.2",
+    "@tauri-apps/plugin-store": "^2.2",
+    "better-auth": "^1.7.2",
+    "framer-motion": "^11.18",
+    "i18next": "^24.2",
+    "lucide-react": "^0.460",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-i18next": "^15.4",
+    "zustand": "^5.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.18",
+    "@tailwindcss/vite": "^4.1",
+    "@tauri-apps/cli": "^2.5",
+    "@testing-library/jest-dom": "^6.6",
+    "@testing-library/react": "^16.3",
+    "@types/node": "^22.20.1",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "@vitejs/plugin-react": "^4.6.0",
+    "eslint": "^9.18",
+    "eslint-plugin-react-hooks": "^5.2",
+    "eslint-plugin-react-refresh": "^0.4",
+    "jsdom": "^25.0",
+    "prettier": "^3.5",
+    "tailwindcss": "^4.1",
+    "typescript": "~5.8.3",
+    "typescript-eslint": "^8.22",
+    "vite": "^7.3.6",
+    "vitest": "^3.2.7"
+  }
+}

@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "package": "PopSpeak Core Offline CPU Model Pack",
+  "models": [
+    {
+      "id": "sensevoice-small-int8",
+      "role": "speech_recognition",
+      "provider": "sensevoice",
+      "display_name": "SenseVoice Small INT8",
+      "recommended": true,
+      "files": {
+        "model": "sensevoice/model.int8.onnx",
+        "tokens": "sensevoice/tokens.txt"
+      },
+      "runtime": "sherpa-onnx",
+      "quantization": "INT8",
+      "cpu_only": true,
+      "parameters": {
+        "sample_rate_hz": 16000,
+        "language": "auto",
+        "threads_default": 2,
+        "gpu": false
+      },
+      "artifacts": [
+        {
+          "path": "sensevoice/model.int8.onnx",
+          "bytes": 239233841,
+          "sha256": "c71f0ce00bec95b07744e116345e33d8cbbe08cef896382cf907bf4b51a2cd51"
+        },
+        {
+          "path": "sensevoice/tokens.txt",
+          "bytes": 315894,
+          "sha256": "f449eb28dc567533d7fa59be34e2abca8784f771850c78a47fb731a31429a1dc"
+        }
+      ]
+    },
+    {
+      "id": "whisper-tiny",
+      "role": "speech_recognition",
+      "provider": "local-whisper",
+      "display_name": "Whisper tiny",
+      "recommended": false,
+      "files": {
+        "model": "whisper/ggml-tiny.bin"
+      },
+      "runtime": "whisper.cpp",
+      "quantization": "GGML F16",
+      "cpu_only": true,
+      "parameters": {
+        "language": "auto",
+        "translate": false,
+        "gpu": false
+      },
+      "artifacts": [
+        {
+          "path": "whisper/ggml-tiny.bin",
+          "bytes": 77691713,
+          "sha256": "be07e048e1e599ad46341c8d2a135645097a538221678b7acdd1b1919c6e1b21"
+        }
+      ]
+    },
+    {
+      "id": "whisper-base",
+      "role": "speech_recognition",
+      "provider": "local-whisper",
+      "display_name": "Whisper base",
+      "recommended": false,
+      "files": {
+        "model": "whisper/ggml-base.bin"
+      },
+      "runtime": "whisper.cpp",
+      "quantization": "GGML F16",
+      "cpu_only": true,
+      "parameters": {
+        "language": "auto",
+        "translate": false,
+        "gpu": false
+      },
+      "artifacts": [
+        {
+          "path": "whisper/ggml-base.bin",
+          "bytes": 147951465,
+          "sha256": "60ed5bc3dd14eea856493d334349b405782ddcaf0028d4b5df4088345fba2efe"
+        }
+      ]
+    },
+    {
+      "id": "qwen2.5-0.5b-instruct-q4-k-m",
+      "role": "text_polishing_not_asr",
+      "provider": "local-llama",
+      "display_name": "Qwen2.5 0.5B Instruct Q4_K_M",
+      "recommended": false,
+      "files": {
+        "model": "llm/qwen2.5-0.5b-instruct-q4_k_m.gguf"
+      },
+      "runtime": "llama.cpp",
+      "quantization": "GGUF Q4_K_M",
+      "cpu_only": true,
+      "parameters": {
+        "context_tokens": 2048,
+        "gpu_layers": 0,
+        "threads": "auto",
+        "enabled_by_default": false
+      },
+      "artifacts": [
+        {
+          "path": "llm/qwen2.5-0.5b-instruct-q4_k_m.gguf",
+          "bytes": 491400032,
+          "sha256": "74a4da8c9fdbcd15bd1f6d01d621410d31c6fc00986f5eb687824e7b93d7a9db"
+        }
+      ]
+    }
+  ]
+}

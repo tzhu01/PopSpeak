@@ -1,0 +1,18 @@
+# Code Owners
+# These users will be automatically requested for review on PRs
+# that modify matching paths.
+
+# Default owner for everything
+* @tzhu01
+
+# Rust backend
+/src-tauri/ @tzhu01
+
+# Frontend
+/src/ @tzhu01
+
+# CI/CD
+/.github/ @tzhu01
+
+# Documentation
+/*.md @tzhu01

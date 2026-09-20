@@ -1,0 +1,110 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "PopSpeak",
+  "version": "0.4.2",
+  "identifier": "com.popspeak.desktop",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "npm run build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "macOSPrivateApi": true,
+    "windows": [
+      {
+        "label": "main",
+        "title": "PopSpeak",
+        "width": 900,
+        "height": 700,
+        "minWidth": 720,
+        "minHeight": 480,
+        "resizable": true,
+        "decorations": false,
+        "transparent": false,
+        "alwaysOnTop": false,
+        "skipTaskbar": false,
+        "center": true,
+        "visible": false
+      },
+      {
+        "label": "capsule",
+        "title": "PopSpeak Capsule",
+        "width": 80,
+        "height": 80,
+        "resizable": false,
+        "decorations": false,
+        "transparent": true,
+        "shadow": false,
+        "alwaysOnTop": true,
+        "skipTaskbar": true,
+        "visible": false,
+        "url": "index.html#capsule"
+      },
+      {
+        "label": "editor",
+        "title": "PopSpeak Editor",
+        "width": 560,
+        "height": 340,
+        "minWidth": 360,
+        "minHeight": 220,
+        "resizable": true,
+        "decorations": false,
+        "transparent": true,
+        "shadow": true,
+        "alwaysOnTop": true,
+        "skipTaskbar": true,
+        "visible": false,
+        "focus": false,
+        "url": "index.html#editor"
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://*.popspeak.com https://accounts.google.com https://github.com https://huggingface.co https://*.huggingface.co"
+    }
+  },
+  "plugins": {
+    "deep-link": {
+      "desktop": {
+        "schemes": ["popspeak"]
+      }
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["nsis"],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "resources": {
+      "resources/model-catalog.json": "models/catalog.json",
+      "resources/models/ggml-tiny.bin": "models/whisper/ggml-tiny.bin",
+      "resources/models/ggml-base.bin": "models/whisper/ggml-base.bin",
+      "resources/models/qwen2.5-0.5b-instruct-q4_k_m.gguf": "models/llm/qwen2.5-0.5b-instruct-q4_k_m.gguf",
+      "resources/sensevoice/": "models/sensevoice/",
+      "resources/runtimes/whisper/": "runtimes/whisper/",
+      "resources/runtimes/llama/": "runtimes/llama/",
+      "resources/runtimes/funasr/llama-funasr-pipe-host.exe": "runtimes/funasr/llama-funasr-pipe-host.exe",
+      "resources/runtimes/funasr/llama-funasr-pipe-host-avx2.exe": "runtimes/funasr/llama-funasr-pipe-host-avx2.exe",
+      "resources/licenses/": "licenses/",
+      "binaries/onnxruntime.dll": "onnxruntime.dll",
+      "binaries/onnxruntime_providers_shared.dll": "onnxruntime_providers_shared.dll",
+      "binaries/sherpa-onnx-c-api.dll": "sherpa-onnx-c-api.dll",
+      "binaries/sherpa-onnx-cxx-api.dll": "sherpa-onnx-cxx-api.dll"
+    },
+    "macOS": {
+      "minimumSystemVersion": "10.15",
+      "entitlements": "./Entitlements.plist",
+      "infoPlist": "./Info.plist"
+    },
+    "windows": {
+      "nsis": {
+        "compression": "lzma"
+      }
+    }
+  }
+}
