@@ -2,7 +2,7 @@
 
 [English](README.md)
 
-[产品官网](https://popspeak-voice.ambitiousgoebel0126.chatgpt.site) · [问题反馈](https://github.com/tzhu01/PopSpeak/issues)
+[产品官网](https://tzhu01.github.io/PopSpeak/) · [问题反馈](https://github.com/tzhu01/PopSpeak/issues)
 
 当前版本：**0.4.2**。免注册试用累计 200 次或 20 分钟（任一先到），升级保留已有用量与激活状态；激活后开放全部本地功能。云服务由用户自备厂商账号，费用另计。详见[试用升级规则](docs/TRIAL_QUOTA_200_20_MINUTES_ZH.md)与[当前 0.4.2 PRD 入口](docs/PRD_ZH.md)。公众号入口尚待运营方配置，不内置后台登录链接或 Cookie。
 

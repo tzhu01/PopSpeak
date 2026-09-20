@@ -2,7 +2,7 @@
 
 [中文说明](README_zh.md)
 
-[Product website](https://popspeak-voice.ambitiousgoebel0126.chatgpt.site) · [Issue tracker](https://github.com/tzhu01/PopSpeak/issues)
+[Product website](https://tzhu01.github.io/PopSpeak/) · [Issue tracker](https://github.com/tzhu01/PopSpeak/issues)
 
 Current release: **0.4.2**. The offline trial includes 200 recordings or 20 minutes total, whichever is reached first. Existing usage and installation-bound activation are preserved when upgrading. See [trial migration rules](docs/TRIAL_QUOTA_200_20_MINUTES_ZH.md), the [current 0.4.2 PRD entry point](docs/PRD_ZH.md), and [cloud verification boundaries](docs/CLOUD_STT_INTEGRATION_ZH.md). The consumer package contains only an activation public key; keep the operator signing key outside this repository.
 

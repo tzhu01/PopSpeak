@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="PopSpeak 是开源、离线优先的 Windows 语音输入助手：POP 结果窗、模型无关实时预览、专业词热词、多语种输入与完整本地历史。"
+    />
+    <meta name="theme-color" content="#ff563f" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="PopSpeak · 让语音输入先可控，再落笔" />
+    <meta
+      property="og:description"
+      content="开源、离线优先的 Windows 语音输入助手。实时预览，最终校正，结果由你确认。"
+    />
+    <meta property="og:url" content="https://tzhu01.github.io/PopSpeak/" />
+    <link rel="canonical" href="https://tzhu01.github.io/PopSpeak/" />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='17' fill='%23ff563f'/%3E%3Cpath d='M11 34h8l4-12 7 25 7-31 7 22 4-9h6' fill='none' stroke='white' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"
+    />
+    <title>PopSpeak · 开源离线语音输入助手</title>
+    <script>document.documentElement.classList.add('js');</script>
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="./app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">跳到主要内容</a>
+    <header class="site-header" data-header>
+      <a class="brand" href="#top" aria-label="PopSpeak 首页">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 48 48" role="img">
+            <rect width="48" height="48" rx="14" fill="currentColor" />
+            <path
+              d="M8 26h6l3-9 5 18 5-22 5 16 3-7h5"
+              fill="none"
+              stroke="white"
+              stroke-width="3.4"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+        <span>PopSpeak</span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+        <span></span><span></span>
+        <span class="sr-only">打开导航</span>
+      </button>
+      <nav id="site-nav" class="site-nav" aria-label="主要导航">
+        <a href="#difference">产品特色</a>
+        <a href="#workflow">工作方式</a>
+        <a href="#models">模型与语言</a>
+        <a href="#open-source">开源</a>
+        <a class="nav-github" href="https://github.com/tzhu01/PopSpeak" target="_blank" rel="noreferrer">
+          GitHub <span aria-hidden="true">↗</span>
+        </a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section id="top" class="hero section-shell">
+        <div class="hero-copy" data-reveal>
+          <div class="eyebrow"><span></span> Windows · Offline first · Open source</div>
+          <h1>让语音输入<br /><em>先可控，<br />再落笔。</em></h1>
+          <p class="hero-lede">
+            说话时看见近似文字，结束后由你选择的模型完成最终校正。
+            在独立 POP 结果窗里复制、排版、修改，再把内容送往任何应用。
+          </p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="https://github.com/tzhu01/PopSpeak" target="_blank" rel="noreferrer">
+              查看 GitHub 源码
+              <span aria-hidden="true">↗</span>
+            </a>
+            <a class="button button-ghost" href="#workflow">看它怎么工作</a>
+          </div>
+          <ul class="trust-row" aria-label="产品关键信息">
+            <li><strong>MIT</strong><span>OSI 批准许可证</span></li>
+            <li><strong>CPU</strong><span>默认本地运行</span></li>
+            <li><strong>100 ms</strong><span>预览音频分流粒度</span></li>
+          </ul>
+        </div>
+
+        <div class="hero-stage" data-reveal>
+          <div class="stage-orbit orbit-one"></div>
+          <div class="stage-orbit orbit-two"></div>
+          <div class="live-window" aria-label="PopSpeak 实时预览交互演示">
+            <div class="live-titlebar">
+              <div class="live-brand"><span class="status-dot"></span> PopSpeak · POP 结果窗</div>
+              <button class="icon-button pin-active" type="button" aria-label="窗口已置顶" aria-pressed="true" title="窗口已置顶">◆</button>
+            </div>
+            <div class="live-toolbar">
+              <button class="tool-button" type="button" data-copy-demo>复制</button>
+              <button class="tool-button" type="button" data-layout-toggle>排版：自动</button>
+              <span class="live-language">简体中文</span>
+            </div>
+            <div class="live-paper">
+              <p class="live-kicker"><span data-live-state>正在录音 · 近似预览</span><i></i></p>
+              <p class="live-text" data-live-text>我想把今天讨论的三个重点整理出来。</p>
+              <span class="caret" aria-hidden="true"></span>
+            </div>
+            <div class="live-footer">
+              <label class="check-row"><input type="checkbox" data-auto-copy /> <span>完成后自动复制</span></label>
+              <span class="live-note" data-live-note>最终结果将由所选模型校正</span>
+            </div>
+          </div>
+          <div class="signal-card">
+            <span>本地辅路</span>
+            <div class="signal-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            <strong>实时修订中</strong>
+          </div>
+          <div class="final-chip"><span>✓</span> 最终结果已接管</div>
+        </div>
+      </section>
+
+      <section class="proof-strip" aria-label="产品能力概览">
+        <div><strong>双路</strong><span>近似预览 + 最终识别</span></div>
+        <div><strong>本地</strong><span>音频默认不离开设备</span></div>
+        <div><strong>热词</strong><span>解码提示 + 识别后纠错</span></div>
+        <div><strong>全程</strong><span>记录、复制、编辑、删除</span></div>
+      </section>
+
+      <section id="difference" class="section-shell feature-section">
+        <div class="section-heading" data-reveal>
+          <div class="eyebrow"><span></span> What makes PopSpeak different</div>
+          <h2>不只是换一个模型，<br />而是重做语音输入体验。</h2>
+          <p>从说话、预览、校正到落笔，每一步都能看见、能干预、能撤回。</p>
+        </div>
+
+        <div class="feature-grid">
+          <article class="feature-card feature-card-wide coral-card" data-reveal>
+            <span class="feature-index">01</span>
+            <div class="feature-content">
+              <p class="feature-label">POP 结果窗</p>
+              <h3>先在独立窗口里确认，<br />不再追着真实光标回退修改。</h3>
+              <p>
+                复制、自动复制、排版、置顶与语言状态都集中在一个轻量窗口里。
+                富文本编辑器、聊天框或代码窗口不会因为中途修订而被反复打断。
+              </p>
+              <p class="feature-fineprint">结果窗处理纯文本，不保留目标应用原有的富文本样式。</p>
+            </div>
+            <div class="mini-editor" aria-hidden="true">
+              <div><span>● PopSpeak</span><b>置顶</b></div>
+              <p>这是经过最终模型校正后的完整结果。</p>
+              <footer><span>复制</span><span>自动排版</span><span>简体中文</span></footer>
+            </div>
+          </article>
+
+          <article class="feature-card dark-card" data-reveal>
+            <span class="feature-index">02</span>
+            <p class="feature-label">模型无关预览</p>
+            <h3>切换最终模型，<br />实时反馈不断。</h3>
+            <p>
+              一条本地辅路负责持续显示近似文字，另一条主路交给所选本地或云端模型。
+              录音结束后，最终结果自动接管。
+            </p>
+            <div class="lane-diagram" aria-label="双路识别示意图">
+              <span class="lane-source">声音</span>
+              <span class="lane-line lane-a"></span><span class="lane-name lane-a-name">100ms 音频分流</span>
+              <span class="lane-line lane-b"></span><span class="lane-name lane-b-name">最终模型</span>
+              <span class="lane-result">结果窗</span>
+            </div>
+          </article>
+
+          <article class="feature-card" data-reveal>
+            <span class="feature-index">03</span>
+            <p class="feature-label">专业词与热词</p>
+            <h3>专业词不是备注，<br />而是识别链路的一部分。</h3>
+            <p>
+              支持引擎会在解码阶段参考专业词；其他引擎也能通过本地纠错统一人名、产品名和术语。
+              每种模型都明确标注能力边界。
+            </p>
+            <div class="term-flow" aria-label="专业词示例">
+              <span>曾识别成</span><strong>天晴湾</strong><i>→</i><span>专业词</span><strong>天琴湾</strong>
+            </div>
+          </article>
+
+          <article class="feature-card sky-card" data-reveal>
+            <span class="feature-index">04</span>
+            <p class="feature-label">离线与多语种</p>
+            <h3>普通 CPU 也能跑，<br />语言覆盖由模型决定。</h3>
+            <p>
+              中文优先，也可选择覆盖近百种语言的多语种模型。中文方言与混合语言表现会随模型、设备和环境变化，界面会如实说明。
+            </p>
+            <div class="language-cloud" aria-label="示例语言">
+              <span>中文</span><span>English</span><span>日本語</span><span>한국어</span><span>Español</span><span>Français</span>
+            </div>
+          </article>
+
+          <article class="feature-card feature-card-wide history-card" data-reveal>
+            <span class="feature-index">05</span>
+            <div class="feature-content">
+              <p class="feature-label">完整本地历史</p>
+              <h3>识别结束，不代表内容消失。</h3>
+              <p>按日期回看，搜索每一段内容，并直接复制、重新编辑或删除。历史与专业词默认保存在本机。</p>
+              <div class="history-actions"><span>回看</span><span>复制</span><span>编辑</span><span>删除</span></div>
+            </div>
+            <div class="history-list" aria-hidden="true">
+              <small>今天</small>
+              <p>把今天讨论的三个重点整理出来。 <i>复制</i></p>
+              <p>这是一段可以再次编辑的历史记录。 <i>编辑</i></p>
+              <p>隐私模式下，内容只保存在这台电脑。 <i>删除</i></p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="workflow" class="workflow-section">
+        <div class="section-shell">
+          <div class="section-heading centered" data-reveal>
+            <div class="eyebrow"><span></span> One recording, two lanes</div>
+            <h2>边说边看，结束即定稿。</h2>
+            <p>实时感来自独立辅路，准确性由最终模型负责。二者互不污染。</p>
+          </div>
+          <div class="workflow-steps">
+            <article data-reveal><b>01</b><div class="step-icon">⌁</div><h3>按下就说</h3><p>麦克风先启动，模型冷启动也不会吃掉开头。</p></article>
+            <article data-reveal><b>02</b><div class="step-icon">≈</div><h3>近似预览</h3><p>音频每 100ms 进入辅路，聚合足够上下文后持续修订。</p></article>
+            <article data-reveal><b>03</b><div class="step-icon">✓</div><h3>最终校正</h3><p>所选模型独立完成整段识别，替换近似文字。</p></article>
+            <article data-reveal><b>04</b><div class="step-icon">↗</div><h3>由你落笔</h3><p>确认、排版、复制，或进入编辑器再修改。</p></article>
+          </div>
+          <p class="precision-note" data-reveal>
+            注：100ms 是预览音频传输粒度，不是端到端出字承诺。首次可读预览通常需要积累约 0.8 秒语音，实际速度取决于 CPU、模型、麦克风和环境。
+          </p>
+        </div>
+      </section>
+
+      <section class="showcase-section section-shell" aria-labelledby="showcase-title">
+        <div class="showcase-copy" data-reveal>
+          <div class="eyebrow"><span></span> A controllable result window</div>
+          <h2 id="showcase-title">结果先停在这里，<br />决定权还在你手里。</h2>
+          <p>POP 结果窗借鉴截图工具“先捕获、再处理”的工作流，但服务的是文字：不抢真实输入框，不依赖连续回退，也不把中间错误留在文档里。</p>
+          <ul class="check-list">
+            <li><span>✓</span> 一键复制与完成后自动复制</li>
+            <li><span>✓</span> 自动、去换行、多行等排版策略</li>
+            <li><span>✓</span> 窗口置顶、语言状态与本地历史</li>
+          </ul>
+        </div>
+        <figure class="product-shot product-shot-editor" data-reveal>
+          <img src="./assets/popspeak-preview.png" alt="PopSpeak 录音中的本地近似文字预览" width="430" height="340" loading="lazy" />
+          <figcaption>录音中预览 · 最终结果随后校正</figcaption>
+        </figure>
+      </section>
+
+      <section id="models" class="models-section">
+        <div class="section-shell">
+          <div class="section-heading split-heading" data-reveal>
+            <div>
+              <div class="eyebrow"><span></span> Choose your final engine</div>
+              <h2>一套输入体验，<br />多种最终模型。</h2>
+            </div>
+            <p>本地优先，也允许自备云端账号。模型名称、大小、语言和热词能力公开标注，不用猜。</p>
+          </div>
+          <div class="model-grid">
+            <article data-reveal><span class="model-logo sv">SV</span><div><h3>SenseVoice Small</h3><p>中文日常输入 · 本地 CPU · 轻量</p></div><b>默认</b></article>
+            <article data-reveal><span class="model-logo fun">Fun</span><div><h3>Fun-ASR-Nano</h3><p>中文增强 · 解码热词 · 本地 CPU</p></div><b>中文</b></article>
+            <article data-reveal><span class="model-logo wh">W</span><div><h3>Whisper 系列</h3><p>多语种 · 多种体积 · 本地 CPU</p></div><b>多语种</b></article>
+            <article data-reveal><span class="model-logo cloud">⌁</span><div><h3>SeedASR 与自定义云端</h3><p>字节、阿里、腾讯、讯飞、百度等 BYOK</p></div><b>可选</b></article>
+          </div>
+          <figure class="product-shot product-shot-models" data-reveal>
+            <img src="./assets/popspeak-models.png" alt="PopSpeak 语音识别模型选择界面" width="1344" height="1145" loading="lazy" />
+            <figcaption>模型能力卡片 · 真实名称、下载状态与适用场景</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="comparison-section section-shell">
+        <div class="section-heading" data-reveal>
+          <div class="eyebrow"><span></span> A different trade-off</div>
+          <h2>我们选择把控制权，<br />放回用户这一边。</h2>
+        </div>
+        <div class="comparison-wrap" data-reveal>
+          <table>
+            <caption class="sr-only">PopSpeak 与典型语音输入工作流能力对比</caption>
+            <thead>
+              <tr><th scope="col">能力</th><th scope="col" class="ours">PopSpeak</th><th scope="col">典型云端语音助手</th><th scope="col">常见单模型离线工具</th></tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">中间结果</th><td class="ours">所有最终模型共享本地预览</td><td>取决于云接口</td><td>多数结束后出字</td></tr>
+              <tr><th scope="row">落笔方式</th><td class="ours">POP 结果窗 / 复制 / 编辑后确认</td><td>直接上屏为主</td><td>直接上屏或剪贴板</td></tr>
+              <tr><th scope="row">专业词</th><td class="ours">解码热词 + 本地纠错分层标注</td><td>取决于厂商</td><td>常见为结果替换</td></tr>
+              <tr><th scope="row">隐私边界</th><td class="ours">默认本地；云端需用户主动配置</td><td>通常需要联网</td><td>通常本地</td></tr>
+              <tr><th scope="row">历史闭环</th><td class="ours">回看、搜索、复制、编辑、删除</td><td>因产品而异</td><td>常见为基础记录</td></tr>
+              <tr><th scope="row">可审计性</th><td class="ours">MIT 开源，构建与数据边界公开</td><td>通常闭源</td><td>因项目而异</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="comparison-note">比较为产品形态概括，不代表所有同类产品；具体能力以各产品当前版本为准。</p>
+      </section>
+
+      <section class="history-showcase section-shell">
+        <div class="history-ui" data-reveal aria-label="PopSpeak 本地历史记录示意">
+          <header><div><small>ARCHIVE</small><h3>历史记录</h3></div><span>本地保存</span></header>
+          <div class="history-search">⌕&nbsp;&nbsp;搜索历史记录…</div>
+          <div class="history-date">今天</div>
+          <article><p>请把今天讨论的三个重点整理出来。</p><small>15:10 · 文档</small><div><span>编辑</span><span>复制</span><span>删除</span></div></article>
+          <article><p>这是一段可以再次检查和复用的识别结果。</p><small>14:26 · 浏览器</small><div><span>编辑</span><span>复制</span><span>删除</span></div></article>
+          <article><p>离线模式下，语音不需要离开这台电脑。</p><small>11:08 · 笔记</small><div><span>编辑</span><span>复制</span><span>删除</span></div></article>
+        </div>
+        <div class="showcase-copy" data-reveal>
+          <div class="eyebrow"><span></span> Your words stay useful</div>
+          <h2>每一次输入，<br />都可以重新使用。</h2>
+          <p>最近的识别结果不只是日志，而是可再次进入工作流的内容库。找到一段话，复制它、改好它，或者彻底删除它。</p>
+          <div class="privacy-card">
+            <span class="privacy-lock">⌾</span>
+            <div><strong>本地默认</strong><p>离线识别、专业词与历史保存在设备上；只有你主动选择云端服务时，数据才会发送给相应服务商。</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="open-source" class="open-source-section">
+        <div class="section-shell open-source-grid">
+          <div class="open-copy" data-reveal>
+            <div class="eyebrow light"><span></span> Open source, for real</div>
+            <h2>代码可以读，<br />也可以改。</h2>
+            <p>
+              PopSpeak 自有源码采用 <a href="https://opensource.org/license/mit" target="_blank" rel="noreferrer">OSI 批准的 MIT 许可证</a>，允许使用、修改、分发和商业使用；第三方模型与运行库继续遵守各自许可证。
+            </p>
+            <div class="open-actions">
+              <a class="button button-light" href="https://github.com/tzhu01/PopSpeak" target="_blank" rel="noreferrer">浏览源代码 ↗</a>
+              <a class="text-link" href="https://github.com/tzhu01/PopSpeak/issues" target="_blank" rel="noreferrer">提交问题</a>
+            </div>
+            <p class="license-note">查看仓库中的 <a href="https://github.com/tzhu01/PopSpeak/blob/main/LICENSE" target="_blank" rel="noreferrer">完整许可证正文</a>。“PopSpeak”名称与官方标识属于项目品牌；代码许可证不代表 OSI 对本项目背书。</p>
+          </div>
+          <div class="code-panel" data-reveal aria-label="PopSpeak 开源能力列表">
+            <header><span></span><span></span><span></span><b>popspeak / architecture</b></header>
+            <pre><code><i>01</i> microphone.capture()
+<i>02</i>   ├─ preview_lane <em>100ms PCM</em>
+<i>03</i>   │    └─ approximate_text()
+<i>04</i>   └─ selected_engine
+<i>05</i>        └─ authoritative_result()
+<i>06</i>
+<i>07</i> final → terms → optional_polish
+<i>08</i>       → POP window → your app</code></pre>
+            <footer><span>MIT</span><span>Windows</span><span>Rust + React</span></footer>
+          </div>
+        </div>
+      </section>
+
+      <section class="faq-section section-shell">
+        <div class="section-heading" data-reveal>
+          <div class="eyebrow"><span></span> Frequently asked</div>
+          <h2>几个重要问题。</h2>
+        </div>
+        <div class="faq-list" data-reveal>
+          <details><summary>所谓“所有模型流式输出”准确是什么意思？<span>＋</span></summary><p>指所有最终模型都能共享 PopSpeak 的本地近似预览辅路，而不是宣称每个模型原生支持流式。录音结束后，仍由你选择的模型给出权威结果并覆盖预览。</p></details>
+          <details><summary>100ms 是最终识别延迟吗？<span>＋</span></summary><p>不是。100ms 是预览辅路的音频传输粒度。首次可读预览需要积累上下文，实际时间还会受 CPU、音量、噪声和模型影响。</p></details>
+          <details><summary>离线模式会上传音频吗？<span>＋</span></summary><p>不会。默认本地识别在设备上完成。只有主动配置豆包或自定义云端识别时，音频才会发送到所选服务商，费用和数据条款也由该服务商决定。云端凭证保存在本机设置中，请勿分享个人配置文件。</p></details>
+          <details><summary>真的支持近百种语言和方言吗？<span>＋</span></summary><p>语言覆盖取决于所选模型。Whisper 等多语种模型覆盖近百种语言；中文方言、混合语音和低资源语言的实际效果会因模型与录音环境而变化。</p></details>
+          <details><summary>POP 结果窗会保留 Word 等应用的富文本格式吗？<span>＋</span></summary><p>不会。结果窗处理的是纯文本，它解决的是检查、排版、复制与再次编辑问题；粘贴到目标应用后的字体、样式和富文本结构仍由目标应用管理。</p></details>
+          <details><summary>历史记录会无限保存吗？<span>＋</span></summary><p>不会。当前数据库最多保留最近 5,000 条，界面优先加载最近 200 条；你可以逐条删除或清空全部历史。</p></details>
+          <details><summary>开源以后还会有官方版本吗？<span>＋</span></summary><p>会。MIT 允许社区自行构建和修改；官方发布计划在正式公开分发前完成签名与依赖核验，并继续提供模型管理和统一更新。品牌与官方发布身份不随代码许可证自动授权。</p></details>
+        </div>
+      </section>
+
+      <section class="final-cta section-shell" data-reveal>
+        <div>
+          <div class="eyebrow"><span></span> Speak. Review. Use.</div>
+          <h2>不急着上屏，<br />先把话说清楚。</h2>
+          <p>关注源码进度、参与测试，或者提交你最常遇到的语音输入问题。</p>
+        </div>
+        <div class="final-actions">
+          <a class="button button-primary" href="https://github.com/tzhu01/PopSpeak" target="_blank" rel="noreferrer">在 GitHub 查看 PopSpeak ↗</a>
+          <span>Windows 10 / 11 · x64 · CPU first</span>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-brand"><span class="brand-mark small" aria-hidden="true"><svg viewBox="0 0 48 48"><rect width="48" height="48" rx="14" fill="currentColor"/><path d="M8 26h6l3-9 5 18 5-22 5 16 3-7h5" fill="none" stroke="white" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div><strong>PopSpeak</strong><p>开源、离线优先的 Windows 语音输入助手。</p></div></div>
+      <div class="footer-links"><a href="#difference">产品特色</a><a href="#open-source">开源说明</a><a href="https://github.com/tzhu01/PopSpeak" target="_blank" rel="noreferrer">GitHub</a></div>
+      <p class="footer-meta">© <span data-year></span> PopSpeak Contributors · MIT License</p>
+    </footer>
+
+    <div class="toast" role="status" aria-live="polite" data-toast>文字已复制</div>
+  </body>
+</html>
