@@ -1,3 +1,7 @@
+[default]
+# Signed test vectors are opaque data, not prose.
+extend-ignore-re = ['PS1\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+']
+
 [default.extend-words]
 # Allow these "words" that typos might flag
 cpal = "cpal"
@@ -5,6 +9,7 @@ stt = "stt"
 llm = "llm"
 byok = "byok"
 hotkey = "hotkey"
+caf = "caf" # Core Audio Format file extension
 
 [files]
 extend-exclude = [
