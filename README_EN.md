@@ -4,7 +4,7 @@
 
 [Website](https://tzhu01.github.io/PopSpeak/) · [Build from source](BUILD_WINDOWS.md) · [Report an issue](https://github.com/tzhu01/PopSpeak/issues) · [简体中文](README.md)
 
-**Release status:** the source is public, but there is no official Windows installer or portable download yet. Before publishing binaries, the project must complete [signing, redistribution checks, and clean-machine testing](docs/OPEN_SOURCE_RELEASE_CHECKLIST.md). The [Releases page](https://github.com/tzhu01/PopSpeak/releases) should not be mistaken for an available download.
+**Release status:** the source is public, but there is no official Windows installer or portable download yet. Releases labeled "source only" contain source archives, not a runnable Windows app. Before publishing binaries, the project must complete [signing, redistribution checks, and clean-machine testing](docs/OPEN_SOURCE_RELEASE_CHECKLIST.md). See the [Releases page](https://github.com/tzhu01/PopSpeak/releases) for the current status.
 
 ![PopSpeak's POP text-preview window while recording](site/assets/popspeak-preview.png)
 
@@ -16,6 +16,7 @@
 - **A preview regardless of the final model.** A local side lane revises approximate text while you speak; the selected offline or cloud recognizer produces the final result after recording. `100 ms` is the audio handoff granularity, not a promise of first-text or final-result latency, and not native streaming support in every model.
 - **Offline first.** Default recognition runs on the local CPU. Audio, vocabulary, and history stay on the device; cloud recognition requires an explicit opt-in.
 - **Honest vocabulary support.** Depending on the engine, terms are passed as decoder hints or applied as local post-recognition normalization; the app labels which path is active.
+- **Images to editable text.** Select or drop an image to use locally installed Windows OCR languages, then revise, format, and copy the result. PopSpeak does not upload the image or extracted text to a service.
 - **Reusable history.** Search, copy, edit, and delete past results. Language and dialect quality depend on the chosen model and recording conditions.
 
 ## Try it

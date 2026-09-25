@@ -3715,7 +3715,7 @@ dependencies = [
 
 [[package]]
 name = "popspeak"
-version = "0.4.2"
+version = "0.4.3"
 dependencies = [
  "anyhow",
  "arboard",
@@ -3760,6 +3760,7 @@ dependencies = [
  "transcribe-cpp",
  "url",
  "uuid",
+ "windows 0.61.3",
  "windows-sys 0.59.0",
 ]
 

@@ -1,14 +1,12 @@
-name: Release
+name: Windows Binary Release
 
 on:
-  push:
-    tags: ['v*']
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Release tag (e.g. v0.1.14)'
+        description: 'Existing, reviewed binary-release tag (e.g. v0.5.0)'
         required: true
-        default: 'v0.2.0'
+        type: string
 
 permissions:
   contents: write
@@ -27,14 +25,20 @@ jobs:
     runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: refs/tags/${{ inputs.tag }}
 
       - name: Sync version from tag
         shell: bash
         env:
-          RELEASE_TAG_INPUT: ${{ github.event.inputs.tag || github.ref_name }}
+          RELEASE_TAG_INPUT: ${{ inputs.tag }}
         run: |
-          if [[ ! "$RELEASE_TAG_INPUT" =~ ^v?[0-9]+\.[0-9]+\.[0-9]+([.-][0-9A-Za-z.-]+)?$ ]]; then
+          if [[ ! "$RELEASE_TAG_INPUT" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
             echo "Invalid release tag: $RELEASE_TAG_INPUT" >&2
+            exit 1
+          fi
+          if ! git show-ref --verify --quiet "refs/tags/$RELEASE_TAG_INPUT"; then
+            echo "The binary release tag does not exist: $RELEASE_TAG_INPUT" >&2
             exit 1
           fi
           VERSION="${RELEASE_TAG_INPUT#v}"
@@ -127,8 +131,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tagName: ${{ github.event.inputs.tag || github.ref_name }}
-          releaseName: 'PopSpeak ${{ github.event.inputs.tag || github.ref_name }}'
+          tagName: ${{ inputs.tag }}
+          releaseName: 'PopSpeak ${{ inputs.tag }}'
           releaseBody: 'See the assets below to download and install.'
           releaseDraft: true
           prerelease: false
@@ -150,7 +154,7 @@ jobs:
         shell: pwsh
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RELEASE_TAG: ${{ github.event.inputs.tag || github.ref_name }}
+          RELEASE_TAG: ${{ inputs.tag }}
         run: |
           ./scripts/build-portable.ps1 -CreateZip -RequireSignature
           gh release upload $env:RELEASE_TAG ./dist-portable/PopSpeak.zip --clobber

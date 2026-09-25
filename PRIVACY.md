@@ -12,6 +12,17 @@ on the user's computer. The preview lane receives the same 16 kHz mono PCM as
 the selected final recognizer and is never used as the authoritative result.
 PopSpeak does not intentionally save raw microphone audio.
 
+## Image-to-text recognition
+
+When you choose or drop an image in the Image Recognition page, PopSpeak reads
+that local file with the Windows OCR language packs installed on your computer.
+The image and recognized text are not uploaded by this feature. The image path
+and editable result stay in the current page session; they are not automatically
+saved to speech history or app data. Closing or leaving the page discards them.
+Choosing Copy places the current text on the system clipboard, where other apps
+and normal clipboard-history features may access it. Clear the clipboard if the
+recognized text is sensitive.
+
 ## Optional network features
 
 - Selecting a cloud speech provider sends microphone audio and the configured

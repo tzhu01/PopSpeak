@@ -1,4 +1,4 @@
-import { Home, Settings, History, UserRound } from 'lucide-react'
+import { Home, Settings, History, ScanText, UserRound } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { spring } from '../../lib/animations'
@@ -10,6 +10,7 @@ import { useActivationLifecycle, useActivationStore } from '../../lib/activation
 
 const navItems: { id: Route; labelKey: string; icon: typeof Home }[] = [
   { id: 'home', labelKey: 'nav.home', icon: Home },
+  { id: 'image', labelKey: 'nav.image', icon: ScanText },
   { id: 'settings', labelKey: 'nav.settings', icon: Settings },
   { id: 'history', labelKey: 'nav.history', icon: History },
   { id: 'account', labelKey: 'nav.account', icon: UserRound },

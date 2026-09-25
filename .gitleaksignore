@@ -1,0 +1,4 @@
+# Historical false positive: a public model-file SHA-256 checksum adjacent to
+# the filename tokens.txt, not a credential. Keep this exception fingerprint-
+# scoped so new occurrences of the generic-api-key rule are still reported.
+5d39d01f76b5b11e23659f98f055b19af266e114:scripts/probe-legacy-model-fallbacks.mjs:generic-api-key:12

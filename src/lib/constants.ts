@@ -1,6 +1,6 @@
 // App metadata
 export const APP_NAME = 'PopSpeak'
-export const APP_VERSION = 'v0.4.2'
+export const APP_VERSION = 'v0.4.3'
 export const APP_REPO_URL = 'https://github.com/tzhu01/PopSpeak'
 export const APP_LICENSE_URL = 'https://github.com/tzhu01/PopSpeak/blob/main/LICENSE'
 // Cloud API base URL — defaults to www.popspeak.com but can be overridden via VITE_API_BASE_URL env var.

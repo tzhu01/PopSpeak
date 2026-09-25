@@ -1,6 +1,8 @@
 pub mod activation;
 pub mod app_detector;
 pub mod audio;
+#[cfg(target_os = "windows")]
+mod image_ocr;
 mod integrity;
 pub mod llm;
 pub mod output;
@@ -150,6 +152,21 @@ pub fn refresh_tray(app: &tauri::AppHandle) {
 #[tauri::command]
 async fn start_recording(state: tauri::State<'_, pipeline::PipelineHandle>) -> Result<(), String> {
     state.start().await.map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+async fn recognize_image(path: String) -> Result<String, String> {
+    #[cfg(target_os = "windows")]
+    {
+        tokio::task::spawn_blocking(move || image_ocr::recognize_path(&path))
+            .await
+            .map_err(|error| format!("图片识别任务异常：{error}"))?
+    }
+    #[cfg(not(target_os = "windows"))]
+    {
+        let _ = path;
+        Err("图片识别目前仅支持 Windows。".into())
+    }
 }
 
 #[tauri::command]
@@ -2349,6 +2366,7 @@ pub fn run() {
         })
         .invoke_handler(tauri::generate_handler![
             quit_app,
+            recognize_image,
             start_recording,
             stop_recording,
             abort_recording,

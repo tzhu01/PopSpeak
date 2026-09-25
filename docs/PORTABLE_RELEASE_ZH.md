@@ -1,5 +1,7 @@
 # PopSpeak 完整便携版发布
 
+源码版 `v0.4.3` 不包含便携包。当前二进制再分发与签名门禁尚未通过，以下步骤仅供本地构建和验收；公开上传需先完成[发布清单](OPEN_SOURCE_RELEASE_CHECKLIST.md)。
+
 最终 `dist-portable` 仅保留一个版本的三个交付物：
 
 ```text
@@ -40,7 +42,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/build-complete-porta
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify-portable-archive.ps1 `
   -ArchivePath ".\dist-portable\PopSpeak-Final.7z" `
   -ExpectedExe ".\src-tauri\target\release\popspeak.exe" `
-  -ExpectedVersion "0.4.2" -RequireComplete
+  -ExpectedVersion "0.4.3" -RequireComplete
 ```
 
 暂存和临时解压都需要磁盘空间，应按完整模型目录大小预留两份展开容量，另外预留压缩包和编译产物空间。内嵌资源自检不替代实际窗口及语音功能测试；发布前还要在未运行 Vite 的情况下打开解压 EXE，检查首页、模型页、设置、悬浮球和默认离线识别。

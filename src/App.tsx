@@ -20,6 +20,7 @@ import { History } from './components/History'
 import { MainLayout } from './components/MainLayout'
 import { TitleBar } from './components/MainLayout/TitleBar'
 import { HomePage } from './components/HomePage'
+import { ImageRecognition } from './components/ImageRecognition'
 import { UpgradePage } from './components/UpgradePage'
 import { AccountPage } from './components/AccountPage'
 import { ToastContainer } from './components/Toast'
@@ -179,6 +180,7 @@ function MainApp() {
   return (
     <MainLayout>
       {route === 'home' && <HomePage />}
+      {route === 'image' && <ImageRecognition />}
       {route === 'settings' && <Settings />}
       {route === 'history' && <History />}
       {route === 'upgrade' && <UpgradePage />}

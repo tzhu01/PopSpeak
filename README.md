@@ -4,7 +4,7 @@
 
 [产品官网](https://tzhu01.github.io/PopSpeak/) · [使用与构建](BUILD_WINDOWS.md) · [反馈问题](https://github.com/tzhu01/PopSpeak/issues) · [English](README_EN.md)
 
-**当前状态：源码已公开，Windows 安装包和便携包尚未正式发布。** [Releases 页面](https://github.com/tzhu01/PopSpeak/releases)目前没有可供下载的官方版本；发布前还需要完成 [签名、依赖许可和实机验收](docs/OPEN_SOURCE_RELEASE_CHECKLIST.md)。请勿把其他渠道的旧压缩包当作官方发行版。
+**当前状态：源码已公开，Windows 安装包和便携包尚未正式发布。** [Releases 页面](https://github.com/tzhu01/PopSpeak/releases)中标为“源码版”的版本仅提供源码归档，不是可直接运行的 Windows 程序。正式二进制发布前还需完成 [签名、依赖许可和实机验收](docs/OPEN_SOURCE_RELEASE_CHECKLIST.md)。请勿把其他渠道的旧压缩包当作官方发行版。
 
 ![PopSpeak 录音时的 POP 文字预览窗](site/assets/popspeak-preview.png)
 
@@ -17,6 +17,7 @@
 - **离线优先。** 默认识别在本机 CPU 运行，音频、专业词和历史记录留在设备上；云端识别是用户主动配置的可选项。
 - **专业词有能力说明。** 根据当前引擎，词汇可作为解码提示或用于本地识别后规范化；界面会说明具体方式，不把文字替换冒充模型热词。
 - **结果找得回。** 历史记录支持搜索、复制、编辑和逐条删除；多语种、方言效果取决于所选模型与录音环境。
+- **图片也能转文字。** 选择或拖入图片，由本机 Windows OCR 提取文字，再校对、排版和复制；可用语言取决于系统已安装的 OCR 语言包，图片和结果不会上传到 PopSpeak 服务。
 
 ## 三步使用
 
