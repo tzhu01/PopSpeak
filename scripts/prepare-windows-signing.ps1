@@ -48,34 +48,58 @@ try {
         throw "signtool.exe was not found in the Windows SDK."
     }
 
+    $configPath = Join-Path $repoRoot "src-tauri\tauri.conf.json"
+    $config = Get-Content -LiteralPath $configPath -Raw | ConvertFrom-Json
+    $tauriRoot = [System.IO.Path]::GetFullPath((Join-Path $repoRoot "src-tauri"))
+    $resourceSources = if ($config.bundle.resources -is [array]) {
+        @($config.bundle.resources)
+    } elseif ($config.bundle.resources) {
+        @($config.bundle.resources.PSObject.Properties.Name)
+    } else {
+        @()
+    }
     $nativeFiles = @(
-        Get-ChildItem -LiteralPath (Join-Path $repoRoot "src-tauri\resources\runtimes") -Recurse -File |
-            Where-Object { $_.Extension -in ".exe", ".dll" }
-        Get-ChildItem -LiteralPath (Join-Path $repoRoot "src-tauri\binaries") -File |
-            Where-Object { $_.Extension -eq ".dll" }
-    )
+        foreach ($source in $resourceSources) {
+            if ($source -match '[*?\[\]]') {
+                throw "Cannot verify the bundled native files for wildcard resource: $source"
+            }
+            $sourcePath = [System.IO.Path]::GetFullPath((Join-Path $tauriRoot $source))
+            if (!(Test-Path -LiteralPath $sourcePath)) {
+                throw "Configured bundle resource is missing: $sourcePath"
+            }
+            $resource = Get-Item -LiteralPath $sourcePath
+            if ($resource.PSIsContainer) {
+                Get-ChildItem -LiteralPath $sourcePath -Recurse -File |
+                    Where-Object { $_.Extension -in ".exe", ".dll" }
+            } elseif ($resource.Extension -in ".exe", ".dll") {
+                $resource
+            }
+        }
+    ) | Sort-Object -Property FullName -Unique
     if ($nativeFiles.Count -eq 0) {
-        throw "No native runtime files were found to sign."
+        throw "No native files are configured as bundle resources to sign."
     }
     foreach ($file in $nativeFiles) {
         & $signTool.FullName sign /sha1 $certificate.Thumbprint /fd sha256 /tr $TimestampUrl /td sha256 $file.FullName
         if ($LASTEXITCODE -ne 0) {
             throw "signtool failed for $($file.FullName)"
         }
+        & $signTool.FullName verify /pa /all $file.FullName
+        if ($LASTEXITCODE -ne 0) {
+            throw "signtool could not verify $($file.FullName)"
+        }
+        $signature = Get-AuthenticodeSignature -LiteralPath $file.FullName
+        if ($signature.Status -ne "Valid" -or $signature.SignerCertificate.Thumbprint -ne $certificate.Thumbprint) {
+            throw "The signed file did not verify with the release certificate: $($file.FullName)"
+        }
     }
 
-    $configPath = Join-Path $repoRoot "src-tauri\tauri.conf.json"
-    $config = Get-Content -LiteralPath $configPath -Raw | ConvertFrom-Json
-    $windowsSigning = [pscustomobject]@{
-        certificateThumbprint = $certificate.Thumbprint
-        digestAlgorithm = "sha256"
-        timestampUrl = $TimestampUrl
+    if (!$config.bundle.PSObject.Properties["windows"]) {
+        $config.bundle | Add-Member -NotePropertyName windows -NotePropertyValue ([pscustomobject]@{})
     }
-    if ($config.bundle.PSObject.Properties["windows"]) {
-        $config.bundle.windows = $windowsSigning
-    } else {
-        $config.bundle | Add-Member -NotePropertyName windows -NotePropertyValue $windowsSigning
-    }
+    $config.bundle.windows | Add-Member -NotePropertyName certificateThumbprint -NotePropertyValue $certificate.Thumbprint -Force
+    $config.bundle.windows | Add-Member -NotePropertyName digestAlgorithm -NotePropertyValue "sha256" -Force
+    $config.bundle.windows | Add-Member -NotePropertyName timestampUrl -NotePropertyValue $TimestampUrl -Force
     $config | ConvertTo-Json -Depth 100 | Set-Content -LiteralPath $configPath -Encoding UTF8
 
     Write-Host "Release signing prepared for $($certificate.Subject); expires $($certificate.NotAfter.ToString('u'))."

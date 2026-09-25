@@ -99,6 +99,14 @@ describe('LlmPane', () => {
     mockAppStore.llmModels = []
     mockAuthStore.user = null
     mockAuthStore.plan = null
+    vi.mocked(tauri.getLocalLlmPaths).mockResolvedValue({
+      server_path: 'llama-server.exe',
+      model_dir: 'models/llm',
+      default_model_path: 'models/llm/default.gguf',
+      default_model_ready: true,
+      upgrade_model_path: 'models/llm/upgrade.gguf',
+      upgrade_model_ready: false,
+    })
   })
 
   afterEach(() => {
@@ -285,6 +293,19 @@ describe('LlmPane', () => {
   })
 
   describe('Managed local polish UI', () => {
+    it('marks the local option unavailable when the bundled runtime is missing', async () => {
+      vi.mocked(tauri.getLocalLlmPaths).mockRejectedValue(
+        new Error('llama-server sidecar not found'),
+      )
+      render(<LlmPane />)
+
+      const localOption = await screen.findByRole('option', {
+        name: '本地文字润色（当前安装包不可用）',
+      })
+      expect(localOption).toBeDisabled()
+      expect(screen.getByRole('option', { name: 'OpenRouter' })).not.toBeDisabled()
+    })
+
     it('auto-indexes bundled resources without exposing URL, port, or absolute paths', async () => {
       mockAppStore.config.llm_provider = 'local-llama'
       vi.mocked(tauri.getLocalLlmPaths).mockResolvedValue({

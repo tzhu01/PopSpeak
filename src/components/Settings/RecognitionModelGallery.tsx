@@ -16,6 +16,7 @@ export type RecognitionChoice =
   | 'custom-whisper'
 
 export type ModelAvailability = Partial<Record<RecognitionChoice, boolean>>
+export type ModelRuntimeIssues = Partial<Record<RecognitionChoice, string>>
 
 const choices: {
   id: RecognitionChoice
@@ -52,39 +53,8 @@ const choices: {
     detail: '约 77 MB',
     tags: ['多语种', 'CPU 离线'],
   },
-  {
-    id: 'qwen3-asr-1.7b',
-    title: 'Qwen3-ASR 1.7B',
-    brand: 'qwen',
-    description:
-      '通义多语种语音识别，支持中文与英文混合输入。CPU 可运行，耗时和内存高于 SenseVoice。',
-    detail: '约 1.52 GB · 按需下载',
-    tags: ['Q5_K_M', '中文 / 多语种', 'CPU 离线'],
-  },
-  {
-    id: 'cohere-transcribe-03-2026',
-    title: 'Cohere Transcribe 03-2026',
-    brand: 'cohere',
-    description: '支持中文等 14 种语言的离线转写模型；建议较大内存电脑，首次加载需要等待。',
-    detail: '约 1.77 GB · 按需下载',
-    tags: ['Q5_K_M', '14 种语言', 'CPU 离线'],
-  },
-  {
-    id: 'nemotron-3.5-asr-streaming-0.6b',
-    title: 'Nemotron 3.5 ASR Streaming 0.6B',
-    brand: 'nvidia',
-    description: '多语种语音模型。本应用先按整段离线识别接入，不承诺截图中的 80 ms 流式延迟。',
-    detail: '约 751 MB · 按需下载',
-    tags: ['Q8_0', '多语种', 'CPU 离线'],
-  },
-  {
-    id: 'parakeet-unified-en-0.6b',
-    title: 'Parakeet Unified EN 0.6B',
-    brand: 'nvidia',
-    description: '英语专用模型，不适合中文输入。本应用使用本地 CPU 整段识别。',
-    detail: '约 731 MB · 按需下载',
-    tags: ['Q8_0', '英语专用', 'CPU 离线'],
-  },
+  // Four optional native GGUF models remain in source, but are withheld from
+  // public releases until their redistribution notices and catalog are audited.
   {
     id: 'whisper-base',
     title: 'Whisper Base',
@@ -133,10 +103,12 @@ export function RecognitionModelGallery({
   selected,
   onChoose,
   availability = {},
+  runtimeIssues = {},
 }: {
   selected: RecognitionChoice
   onChoose: (choice: RecognitionChoice) => void
   availability?: ModelAvailability
+  runtimeIssues?: ModelRuntimeIssues
 }) {
   return (
     <section aria-labelledby="recognition-model-title" className="model-gallery space-y-4">
@@ -147,6 +119,9 @@ export function RecognitionModelGallery({
         <p className="mt-1 text-[12px] leading-5 text-text-secondary">
           选一个模型即可开始。离线模型无需 API 费用，软件功能按当前激活状态开放。
         </p>
+        <p className="mt-1 text-[11px] leading-5 text-text-tertiary">
+          部分原生 GGUF 模型正在审核授权与下载源，公开安装包暂不提供下载。
+        </p>
       </div>
       <div
         className="grid gap-3"
@@ -155,13 +130,16 @@ export function RecognitionModelGallery({
         {choices.map(({ id, title, brand, description, detail, tags, recommended, cloud }) => {
           const active = selected === id
           const ready = availability[id]
+          const runtimeIssue = runtimeIssues[id]
           return (
             <button
               key={id}
               type="button"
               onClick={() => onChoose(id)}
+              disabled={Boolean(runtimeIssue)}
               aria-pressed={active}
-              className={`model-choice w-full rounded-[14px] border border-border p-4 text-left transition-colors ${active ? 'model-choice-active' : ''}`}
+              title={runtimeIssue}
+              className={`model-choice w-full rounded-[14px] border border-border p-4 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${active ? 'model-choice-active' : ''}`}
             >
               <span className="flex items-start gap-3">
                 <ModelBrandMark brand={brand} />
@@ -195,10 +173,22 @@ export function RecognitionModelGallery({
                   <span className="mt-2 block text-[12px] leading-5 text-text-secondary">
                     {description}
                   </span>
+                  {runtimeIssue && (
+                    <span className="mt-2 block text-[11px] leading-5 text-error">
+                      {runtimeIssue}
+                    </span>
+                  )}
                   <span className="mt-3 flex flex-wrap items-center justify-between gap-2 text-[11px] text-text-tertiary">
                     <span>{detail}</span>
-                    <span className={`flex items-center gap-1 ${ready ? 'text-success' : ''}`}>
-                      {cloud ? (
+                    <span
+                      className={`flex items-center gap-1 ${ready && !runtimeIssue ? 'text-success' : ''}`}
+                    >
+                      {runtimeIssue ? (
+                        <>
+                          <HardDrive size={12} />
+                          识别组件缺失
+                        </>
+                      ) : cloud ? (
                         <>
                           <Cloud size={12} />
                           需联网

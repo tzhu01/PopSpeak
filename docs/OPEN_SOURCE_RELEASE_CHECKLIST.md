@@ -28,11 +28,18 @@ or portable binary is ready to publish.
 
 - [ ] Clone the exact publish commit into a new temporary directory.
 - [ ] Use `.node-version`, `rust-toolchain.toml` and `npm ci`.
-- [ ] Run every verified fetch/build script, including
-      `scripts/fetch-funasr-nano.ps1`; no resource may be copied from a developer
-      machine or an older portable directory.
+- [ ] Select the reviewed release profile before downloading assets. For the
+      lean SenseVoice NSIS installer, run `scripts/build-lean-nsis.ps1`, which
+      fetches and verifies only its pinned assets. Do not fetch/copy Whisper,
+      Fun-ASR or llama runtimes into this installer. A future full-model
+      portable release needs its own license audit and build gate. No resource
+      may be copied from a developer machine or an older portable directory.
 - [ ] Run frontend tests/lint/format/build and Rust fmt/clippy/tests/audit.
-- [ ] Build the portable archive from that clean clone and verify its manifest.
+- [ ] Build the NSIS installer from that clean clone; verify its SHA-256 and
+      source commit. Install on a clean Windows VM and run
+      `scripts/assert-lean-nsis-assets.ps1 -InstalledDir <path>` against the
+      actual installed payload. A separate portable release must verify its
+      own manifest.
 
 ## Models, runtimes and licenses
 
@@ -44,17 +51,23 @@ or portable binary is ready to publish.
 - [ ] Record immutable upstream revision, filename, size and SHA-256 for every
       downloaded artifact and source archive.
 - [ ] Generate dependency license inventories and an SPDX/CycloneDX SBOM.
-- [ ] Resolve known redistribution blockers before publishing a binary. In
-      particular, verify whether every shipped `libomp` DLL may be redistributed;
-      the current Windows portable snapshot fails
-      `scripts/assert-redistributable-runtime.ps1`.
+- [ ] Resolve redistribution blockers for the actual selected payload. The
+      lean NSIS resource allowlist excludes the old `libomp`-dependent Whisper
+      and llama runtimes; the old Windows portable snapshot still fails
+      `scripts/assert-redistributable-runtime.ps1` and must not be uploaded.
+      The four native GGUF model-download paths must remain disabled in this
+      installer until their full applicable model-license texts and catalog
+      have been audited; source adapters may remain for future work.
 
 ## Release integrity
 
-- [ ] Build in CI, sign the app, installer, native EXEs and DLLs with a trusted
-      Authenticode certificate, and verify signatures after packaging.
+- [ ] For a signed official release, build in CI, sign the app, installer and
+      bundled native DLLs with a trusted Authenticode certificate, and verify
+      signatures after packaging. A separately approved unsigned prerelease
+      must be plainly labeled and must not claim to be officially signed.
 - [ ] Attach checksums, SBOM, provenance and the source commit to the release.
 - [ ] Test a fresh installation on clean Windows 10 and Windows 11 systems,
       including an offline local-recognition smoke test and a cloud opt-in test.
-- [ ] Verify that the archive contains no settings, history, activation database,
-      API credential, private key, transcript or raw recording.
+- [ ] Verify that the installed payload contains no settings, history,
+      activation database, API credential, private key, transcript or raw
+      recording. Never infer NSIS contents from the source tree alone.

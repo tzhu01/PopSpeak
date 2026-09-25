@@ -1,6 +1,6 @@
 // App metadata
 export const APP_NAME = 'PopSpeak'
-export const APP_VERSION = 'v0.4.3'
+export const APP_VERSION = 'v0.4.4'
 export const APP_REPO_URL = 'https://github.com/tzhu01/PopSpeak'
 export const APP_LICENSE_URL = 'https://github.com/tzhu01/PopSpeak/blob/main/LICENSE'
 // Cloud API base URL — defaults to www.popspeak.com but can be overridden via VITE_API_BASE_URL env var.
@@ -25,7 +25,6 @@ export const PRO_PLAN = {
 export const STT_PROVIDERS = [
   { value: 'sensevoice', label: 'SenseVoice Small INT8' },
   { value: 'funasr-nano', label: 'Fun-ASR-Nano GGUF' },
-  { value: 'native-asr', label: 'GGUF 原生语音模型' },
   { value: 'local-whisper', label: 'OpenAI Whisper' },
   { value: 'volcengine-seedasr', label: '豆包 SeedASR 2.0（自费 API）' },
   { value: 'custom-whisper', label: '自定义云端接口' },

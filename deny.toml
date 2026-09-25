@@ -1,0 +1,14 @@
+# PopSpeak currently releases Windows x64 builds only. Audit the dependencies
+# Cargo actually resolves for that target, including optional feature paths.
+# Non-Windows and unselected lockfile entries are excluded by the graph itself;
+# no vulnerability advisory is ignored.
+[graph]
+targets = ["x86_64-pc-windows-msvc"]
+all-features = true
+
+[advisories]
+ignore = []
+# Upstream Tauri carries several unmaintained transitive utility crates.
+# Keep alerts for our direct dependencies without suppressing vulnerabilities
+# or soundness advisories anywhere in the Windows dependency graph.
+unmaintained = "workspace"

@@ -4,7 +4,7 @@
 
 [产品官网](https://tzhu01.github.io/PopSpeak/) · [使用与构建](BUILD_WINDOWS.md) · [反馈问题](https://github.com/tzhu01/PopSpeak/issues) · [English](README_EN.md)
 
-**当前状态：源码已公开，Windows 安装包和便携包尚未正式发布。** [Releases 页面](https://github.com/tzhu01/PopSpeak/releases)中标为“源码版”的版本仅提供源码归档，不是可直接运行的 Windows 程序。正式二进制发布前还需完成 [签名、依赖许可和实机验收](docs/OPEN_SOURCE_RELEASE_CHECKLIST.md)。请勿把其他渠道的旧压缩包当作官方发行版。
+**下载状态请以 [Releases 页面](https://github.com/tzhu01/PopSpeak/releases)的实际资产和签名说明为准。** 标为“源码版”的版本只有源码归档，不是 Windows 安装包；未签名的预发布安装包也不等于正式签名版。旧压缩包不能冒充本次构建。发版门禁见[检查清单](docs/OPEN_SOURCE_RELEASE_CHECKLIST.md)。
 
 ![PopSpeak 录音时的 POP 文字预览窗](site/assets/popspeak-preview.png)
 
@@ -17,15 +17,14 @@
 - **离线优先。** 默认识别在本机 CPU 运行，音频、专业词和历史记录留在设备上；云端识别是用户主动配置的可选项。
 - **专业词有能力说明。** 根据当前引擎，词汇可作为解码提示或用于本地识别后规范化；界面会说明具体方式，不把文字替换冒充模型热词。
 - **结果找得回。** 历史记录支持搜索、复制、编辑和逐条删除；多语种、方言效果取决于所选模型与录音环境。
-- **图片也能转文字。** 选择或拖入图片，由本机 Windows OCR 提取文字，再校对、排版和复制；可用语言取决于系统已安装的 OCR 语言包，图片和结果不会上传到 PopSpeak 服务。
 
 ## 三步使用
 
-1. 在 **Windows 10/11 x64** 上按 [构建说明](BUILD_WINDOWS.md)从源码运行；正式安装包仍在准备中。无需独立显卡，初次准备模型与运行时需要下载。
+1. 在 **Windows 10/11 x64** 上查看 [Releases](https://github.com/tzhu01/PopSpeak/releases)是否有安装包，或按[构建说明](BUILD_WINDOWS.md)从源码运行。无需独立显卡；源码构建时需下载固定模型与运行时。
 2. 默认按住 `Ctrl+/` 说话，POP 窗先显示近似预览，松开后等待最终结果。
 3. 在结果窗校对、编辑并复制，或选用直接输出到原应用。离线功能可免登录试用累计 **200 次或 20 分钟**（先到为准）；继续使用与高级本地功能需要激活。
 
-本地可选 SenseVoice Small、Fun-ASR-Nano 和 Whisper 系列模型；豆包与自定义云端接口需要你自己的服务商账号与凭证，相关费用由服务商决定。模型语言、体积与热词能力见 [模型说明](docs/MODEL_SELECTION_ZH.md)。默认离线识别不会上传音频；更多数据边界见 [隐私说明](PRIVACY.md)。
+首个 Windows 精简安装包只内置 **SenseVoice Small** 离线模型；Whisper、Fun-ASR-Nano 的运行时不随包提供。四个原生 GGUF 模型（Qwen3-ASR、Cohere、Nemotron、Parakeet）的下载入口在此版本**禁用**，适配源码保留，待模型许可文本和目录审查完成再开放。豆包与自定义云端接口需要你自己的服务商账号与凭证，相关费用由服务商决定。模型语言、体积与热词能力见[模型说明](docs/MODEL_SELECTION_ZH.md)。默认离线识别不会上传音频；更多数据边界见[隐私说明](PRIVACY.md)。
 
 ## 参与开源
 

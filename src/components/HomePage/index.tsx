@@ -7,7 +7,6 @@ import {
   ShieldCheck,
   ArrowUpRight,
   ArrowRight,
-  ScanText,
 } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
@@ -144,19 +143,6 @@ export function HomePage() {
           <div className="rounded-[18px] p-4 jelly-card">
             <p className="brand-kicker mb-3">QUICK ACCESS</p>
             <div className="space-y-2">
-              <motion.button
-                onClick={() => navigate('image')}
-                whileHover={{ x: 2 }}
-                whileTap={{ scaleX: 1.02, scaleY: 0.97 }}
-                transition={spring.jellyGentle}
-                className="flex w-full items-center gap-3 rounded-[12px] p-3 cursor-pointer text-left jelly-btn"
-              >
-                <span className="flex h-8 w-8 items-center justify-center rounded-[9px] bg-accent/10 text-accent">
-                  <ScanText size={15} />
-                </span>
-                <span className="flex-1 text-[13px] font-medium">{t('nav.image')}</span>
-                <ArrowUpRight size={14} className="text-text-tertiary" />
-              </motion.button>
               <motion.button
                 onClick={() => navigate('settings')}
                 whileHover={{ x: 2 }}

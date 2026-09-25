@@ -1,7 +1,7 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "PopSpeak",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "identifier": "com.popspeak.desktop",
   "build": {
     "beforeDevCommand": "npm run dev",
@@ -81,15 +81,7 @@
       "icons/icon.ico"
     ],
     "resources": {
-      "resources/model-catalog.json": "models/catalog.json",
-      "resources/models/ggml-tiny.bin": "models/whisper/ggml-tiny.bin",
-      "resources/models/ggml-base.bin": "models/whisper/ggml-base.bin",
-      "resources/models/qwen2.5-0.5b-instruct-q4_k_m.gguf": "models/llm/qwen2.5-0.5b-instruct-q4_k_m.gguf",
       "resources/sensevoice/": "models/sensevoice/",
-      "resources/runtimes/whisper/": "runtimes/whisper/",
-      "resources/runtimes/llama/": "runtimes/llama/",
-      "resources/runtimes/funasr/llama-funasr-pipe-host.exe": "runtimes/funasr/llama-funasr-pipe-host.exe",
-      "resources/runtimes/funasr/llama-funasr-pipe-host-avx2.exe": "runtimes/funasr/llama-funasr-pipe-host-avx2.exe",
       "resources/licenses/": "licenses/",
       "binaries/onnxruntime.dll": "onnxruntime.dll",
       "binaries/onnxruntime_providers_shared.dll": "onnxruntime_providers_shared.dll",
@@ -102,6 +94,9 @@
       "infoPlist": "./Info.plist"
     },
     "windows": {
+      "webviewInstallMode": {
+        "type": "offlineInstaller"
+      },
       "nsis": {
         "compression": "lzma"
       }

@@ -29,12 +29,11 @@ import {
 } from '../../lib/tauri'
 import { FormField } from './shared/FormField'
 import { CustomCloudSettings } from './CustomCloudSettings'
-import { NativeAsrPanel } from './NativeAsrPanel'
-import { NATIVE_ASR_IDS, getNativeAsrPaths } from '../../lib/tauri'
 import {
   RecognitionModelGallery,
   type RecognitionChoice,
   type ModelAvailability,
+  type ModelRuntimeIssues,
 } from './RecognitionModelGallery'
 import {
   CheckCircle2,
@@ -87,24 +86,6 @@ const WHISPER_VARIANTS = [
   },
 ] as const
 
-const COHERE_LANGUAGE_CODES = new Set([
-  'multi',
-  'zh',
-  'en',
-  'ja',
-  'ko',
-  'de',
-  'fr',
-  'es',
-  'it',
-  'pt',
-  'el',
-  'nl',
-  'pl',
-  'vi',
-  'ar',
-])
-
 function configuredModelDirectory(modelPath: string | undefined): string | undefined {
   if (!modelPath || !/^(?:[a-z]:[\\/]|\/)/i.test(modelPath)) return undefined
   const separator = Math.max(modelPath.lastIndexOf('/'), modelPath.lastIndexOf('\\'))
@@ -116,6 +97,7 @@ export function SttPane() {
   const [sttTestError, setSttTestError] = useState<string | null>(null)
   const [modelSelectionHint, setModelSelectionHint] = useState<string | null>(null)
   const [availability, setAvailability] = useState<ModelAvailability>({})
+  const [runtimeIssues, setRuntimeIssues] = useState<ModelRuntimeIssues>({})
   const config = useAppStore((s) => s.config)
   const updateConfig = useAppStore((s) => s.updateConfig)
   const sttTestStatus = useAppStore((s) => s.sttTestStatus)
@@ -131,26 +113,30 @@ export function SttPane() {
   useEffect(() => {
     let disposed = false
     const refresh = async () => {
-      const [senseVoice, funAsr, whisper, ...native] = await Promise.allSettled([
+      const [senseVoice, funAsr, whisper] = await Promise.allSettled([
         getSenseVoicePaths(senseVoiceDirectory),
         getFunAsrPaths(funAsrDirectory),
         getLocalModelPaths(whisperDirectory),
-        ...NATIVE_ASR_IDS.map((id) => getNativeAsrPaths(id, config.native_asr.model_dir)),
       ])
       if (disposed) return
       const values: ModelAvailability = {}
-      native.forEach((result, index) => {
-        if (result.status === 'fulfilled' && result.value)
-          values[NATIVE_ASR_IDS[index]] = (result.value as { ready: boolean }).ready
-      })
+      const issues: ModelRuntimeIssues = {}
       if (senseVoice.status === 'fulfilled' && senseVoice.value)
         values.sensevoice = senseVoice.value.ready
-      if (funAsr.status === 'fulfilled' && funAsr.value) values['funasr-nano'] = funAsr.value.ready
+      if (funAsr.status === 'fulfilled' && funAsr.value) {
+        values['funasr-nano'] = funAsr.value.ready
+        if (!funAsr.value.runtime_ready)
+          issues['funasr-nano'] = '本安装包未提供 Fun-ASR 本地识别组件；仅下载模型无法使用。'
+      }
       if (whisper.status === 'fulfilled' && whisper.value) {
-        for (const variant of WHISPER_VARIANTS)
+        for (const variant of WHISPER_VARIANTS) {
           values[variant.choice] = whisper.value[variant.readyKey]
+          if (!whisper.value.cli_path)
+            issues[variant.choice] = '本安装包未提供 Whisper 本地识别组件；仅下载模型无法使用。'
+        }
       }
       setAvailability(values)
+      setRuntimeIssues(issues)
     }
     void refresh()
     const subscriptions = [
@@ -163,33 +149,24 @@ export function SttPane() {
       listen<{ status?: string }>('sensevoice:download_progress', ({ payload }) => {
         if (payload.status === 'done' || payload.status === 'ready') void refresh()
       }),
-      listen<{ status?: string }>('native-asr:download-progress', ({ payload }) => {
-        if (
-          payload.status === 'done' ||
-          payload.status === 'completed' ||
-          payload.status === 'ready' ||
-          payload.status === 'deleted'
-        )
-          void refresh()
-      }),
     ]
     return () => {
       disposed = true
       for (const subscription of subscriptions)
         void subscription.then((unlisten) => unlisten()).catch(() => {})
     }
-  }, [senseVoiceDirectory, funAsrDirectory, whisperDirectory, config.native_asr.model_dir])
+  }, [senseVoiceDirectory, funAsrDirectory, whisperDirectory])
 
   const isCloud = config.stt_provider === 'cloud'
   const isCustomWhisper = config.stt_provider === 'custom-whisper'
   const isVolcSeedAsr = config.stt_provider === 'volcengine-seedasr'
   const activeSttCredential = isVolcSeedAsr ? config.volcengine_credential : config.stt_api_key
-  const isLocalProvider = ['sensevoice', 'local-whisper', 'funasr-nano', 'native-asr'].includes(
+  const isLocalProvider = ['sensevoice', 'local-whisper', 'funasr-nano'].includes(
     config.stt_provider,
   )
   const selectedModel: RecognitionChoice =
     config.stt_provider === 'native-asr'
-      ? (config.native_asr.model_id as RecognitionChoice)
+      ? 'sensevoice'
       : config.stt_provider === 'local-whisper'
         ? (WHISPER_VARIANTS.find((variant) =>
             config.whisper_model_path?.toLowerCase().endsWith(variant.filename),
@@ -221,15 +198,8 @@ export function SttPane() {
   }
 
   const selectModel = async (choice: RecognitionChoice) => {
-    if (NATIVE_ASR_IDS.some((id) => id === choice)) {
-      selectProvider('native-asr')
-      updateConfig({ native_asr: { ...config.native_asr, model_id: choice } })
-      if (choice === 'cohere-transcribe-03-2026' && !COHERE_LANGUAGE_CODES.has(config.stt_language))
-        updateConfig({ stt_language: 'zh' })
-      if (choice === 'parakeet-unified-en-0.6b') updateConfig({ stt_language: 'en' })
-      setModelSelectionHint(
-        availability[choice] ? null : '此模型需按需下载。下载并保存设置后，下一段录音生效。',
-      )
+    if (runtimeIssues[choice]) {
+      setModelSelectionHint(runtimeIssues[choice])
       return
     }
     const variant = WHISPER_VARIANTS.find((item) => item.choice === choice)
@@ -295,6 +265,7 @@ export function SttPane() {
         selected={selectedModel}
         onChoose={(choice) => void selectModel(choice)}
         availability={availability}
+        runtimeIssues={runtimeIssues}
       />
       {modelSelectionHint && (
         <p
@@ -312,11 +283,9 @@ export function SttPane() {
             ? '激活后可用；模型未安装时按需下载，支持识别阶段热词。'
             : config.stt_provider === 'local-whisper'
               ? 'Whisper 模型激活后可用，按电脑性能和磁盘空间选择。'
-              : config.stt_provider === 'native-asr'
-                ? '开源本地模型，激活后可用；按需下载，音频不会上传。首次加载与识别速度取决于电脑性能。'
-                : isCloud
-                  ? '云端识别需要网络；可用额度与服务状态以账号页面为准。'
-                  : '使用你自己的云服务账号，音频会上传到所选服务商；额度与费用由服务商结算。'}
+              : isCloud
+                ? '云端识别需要网络；可用额度与服务状态以账号页面为准。'
+                : '使用你自己的云服务账号，音频会上传到所选服务商；额度与费用由服务商结算。'}
       </p>
 
       {isCustomWhisper ? (
@@ -512,33 +481,24 @@ export function SttPane() {
         </>
       ) : null}
 
-      {!['sensevoice', 'funasr-nano', 'volcengine-seedasr', 'custom-whisper'].includes(
-        config.stt_provider,
-      ) && (
+      {![
+        'sensevoice',
+        'funasr-nano',
+        'native-asr',
+        'volcengine-seedasr',
+        'custom-whisper',
+      ].includes(config.stt_provider) && (
         <FormField label={t('settings.sttLanguage')}>
           <select
             value={config.stt_language}
             onChange={(e) => updateConfig({ stt_language: e.target.value })}
             className="w-full px-3 py-2.5 bg-bg-secondary border border-border rounded-[10px] text-[13px] text-text-primary outline-none focus:border-border-focus transition-colors"
           >
-            {LANGUAGES.filter(
-              (l) =>
-                config.stt_provider !== 'native-asr' ||
-                config.native_asr.model_id !== 'cohere-transcribe-03-2026' ||
-                COHERE_LANGUAGE_CODES.has(l.value),
-            ).map((l) => (
+            {LANGUAGES.map((l) => (
               <option key={l.value} value={l.value}>
-                {config.stt_provider === 'native-asr' &&
-                config.native_asr.model_id === 'cohere-transcribe-03-2026' &&
-                l.value === 'multi'
-                  ? '中文（默认；此模型不自动检测语言）'
-                  : l.label}
+                {l.label}
               </option>
             ))}
-            {config.stt_provider === 'native-asr' &&
-              config.native_asr.model_id === 'cohere-transcribe-03-2026' && (
-                <option value="el">Ελληνικά (Greek)</option>
-              )}
           </select>
         </FormField>
       )}
@@ -578,14 +538,6 @@ export function SttPane() {
             )}
 
             {config.stt_provider === 'sensevoice' && <SenseVoicePanel />}
-            {config.stt_provider === 'native-asr' && (
-              <NativeAsrPanel
-                key={selectedModel}
-                onReadyChange={(ready) =>
-                  setAvailability((current) => ({ ...current, [selectedModel]: ready }))
-                }
-              />
-            )}
             {config.stt_provider === 'funasr-nano' && (
               <FunAsrPanel
                 onReadyChange={(ready) =>
@@ -648,6 +600,10 @@ function FunAsrPanel({ onReadyChange }: { onReadyChange: (ready: boolean) => voi
   }, [customDir])
 
   const handleDownload = async () => {
+    if (!paths?.runtime_ready) {
+      setError('本安装包未提供 Fun-ASR 本地识别组件；仅下载模型无法使用。')
+      return
+    }
     setDownloading(true)
     setGuideVisible(false)
     setError(null)
@@ -821,6 +777,11 @@ function FunAsrPanel({ onReadyChange }: { onReadyChange: (ready: boolean) => voi
           </div>
         ))}
       </div>
+      {!paths.runtime_ready && (
+        <p role="status" className="text-[11px] text-error">
+          本安装包未提供 Fun-ASR 本地识别组件；仅下载模型无法使用。请安装含该组件的发行包。
+        </p>
+      )}
       {paths.ready && (
         <div className="rounded-[8px] bg-bg-secondary px-3 py-2 text-[10px] text-text-secondary space-y-1">
           <div className="flex justify-between gap-3">
@@ -877,7 +838,7 @@ function FunAsrPanel({ onReadyChange }: { onReadyChange: (ready: boolean) => voi
       {!downloading && (
         <button
           onClick={handleDownload}
-          disabled={busy !== null}
+          disabled={busy !== null || !paths.runtime_ready}
           className="flex w-full items-center justify-center gap-2 rounded-[8px] bg-accent px-3 py-2 text-[12px] text-white disabled:opacity-50"
         >
           <Download size={14} />
@@ -1293,6 +1254,10 @@ function LocalWhisperPanel({ onModelReady }: { onModelReady: () => void }) {
   }, [refresh])
 
   const handleDownload = async (filename: string) => {
+    if (!paths?.cli_path) {
+      setError('本安装包未提供 Whisper 本地识别组件；仅下载模型无法使用。')
+      return
+    }
     setError(null)
     setFailedFilename(null)
     setInstalledHint(null)
@@ -1395,7 +1360,7 @@ function LocalWhisperPanel({ onModelReady }: { onModelReady: () => void }) {
               </span>
               <button
                 type="button"
-                disabled={!ready || active}
+                disabled={!ready || active || cliMissing}
                 onClick={() => updateConfig({ whisper_model_path: paths[variant.pathKey] })}
                 className={active ? 'text-success' : 'text-accent cursor-pointer'}
               >
@@ -1411,7 +1376,7 @@ function LocalWhisperPanel({ onModelReady }: { onModelReady: () => void }) {
       ) && (
         <button
           type="button"
-          disabled={!!downloading}
+          disabled={!!downloading || cliMissing}
           onClick={() => {
             const variant = WHISPER_VARIANTS.find((item) => item.choice === activeVariant)
             if (variant) void handleDownload(variant.filename)
@@ -1423,7 +1388,9 @@ function LocalWhisperPanel({ onModelReady }: { onModelReady: () => void }) {
       )}
 
       {cliMissing && (
-        <p className="text-[11px] text-error">本地识别服务缺失。请重新解压完整离线版后再试。</p>
+        <p role="status" className="text-[11px] text-error">
+          本安装包未提供 Whisper 本地识别组件；仅下载模型无法使用。请安装含该组件的发行包。
+        </p>
       )}
 
       <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
@@ -1431,7 +1398,7 @@ function LocalWhisperPanel({ onModelReady }: { onModelReady: () => void }) {
           <button
             key={variant.choice}
             type="button"
-            disabled={!!downloading}
+            disabled={!!downloading || cliMissing}
             onClick={() => handleDownload(variant.filename)}
             className="flex items-center justify-center gap-2 px-3 py-2 rounded-[8px] border border-border text-[12px] bg-bg-secondary hover:bg-bg-tertiary disabled:opacity-50 cursor-pointer text-text-primary"
           >
@@ -1478,8 +1445,8 @@ function LocalWhisperPanel({ onModelReady }: { onModelReady: () => void }) {
         <summary className="cursor-pointer text-text-secondary">高级技术信息</summary>
         <div className="mt-2 space-y-1 break-all">
           <p>
-            Whisper，whisper.cpp 本地运行时。tiny / base 随包提供；small Q5 与 large-v3-turbo Q5
-            按需下载。权重使用 MIT 许可。
+            Whisper，whisper.cpp 本地运行时。具体内置模型以安装包为准；small Q5 与 large-v3-turbo Q5
+            可在提供本地运行时的发行包中按需下载。权重使用 MIT 许可。
           </p>
           <p>目录：{paths.model_dir}</p>
           <p>运行时：{paths.cli_path || '未安装'}</p>
@@ -1489,6 +1456,7 @@ function LocalWhisperPanel({ onModelReady }: { onModelReady: () => void }) {
       {failedFilename && !downloading && (
         <button
           type="button"
+          disabled={cliMissing}
           className="text-[12px] text-accent"
           onClick={() => handleDownload(failedFilename)}
         >

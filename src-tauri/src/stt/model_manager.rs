@@ -296,7 +296,7 @@ pub fn resolve_model_path(app: &AppHandle, configured: &str) -> String {
 /// Resolve the whisper-cli path used at runtime.
 pub fn resolve_cli_path(app: &AppHandle, configured: &str) -> String {
     let configured = configured.trim();
-    if !configured.is_empty() && std::path::Path::new(configured).exists() {
+    if !configured.is_empty() && std::path::Path::new(configured).is_file() {
         return configured.to_string();
     }
     match cli_path(app) {

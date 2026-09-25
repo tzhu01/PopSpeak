@@ -35,7 +35,33 @@ export function LlmPane() {
   const models = useAppStore((s) => s.llmModels)
   const setModels = useAppStore((s) => s.setLlmModels)
   const [fetchingModels, setFetchingModels] = useState(false)
+  const [managedLocalStatus, setManagedLocalStatus] = useState<
+    'checking' | 'ready' | 'runtime-missing' | 'model-missing'
+  >('checking')
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  useEffect(() => {
+    let disposed = false
+    void getLocalLlmPaths()
+      .then((paths) => {
+        if (!disposed) setManagedLocalStatus(paths.default_model_ready ? 'ready' : 'model-missing')
+      })
+      .catch(() => {
+        if (!disposed) setManagedLocalStatus('runtime-missing')
+      })
+    return () => {
+      disposed = true
+    }
+  }, [])
+
+  const managedLocalUnavailable =
+    managedLocalStatus === 'runtime-missing' || managedLocalStatus === 'model-missing'
+  const managedLocalHint =
+    managedLocalStatus === 'runtime-missing'
+      ? '本安装包未提供本地文字润色运行时；可选择 Ollama 或自备云服务。'
+      : managedLocalStatus === 'model-missing'
+        ? '本地文字润色模型未安装；请选择其他服务或安装包含该模型的发行包。'
+        : null
 
   const doFetchModels = useCallback(
     async (apiKey: string, baseUrl: string) => {
@@ -102,6 +128,7 @@ export function LlmPane() {
           value={config.llm_provider}
           onChange={(e) => {
             const provider = e.target.value as typeof config.llm_provider
+            if (provider === 'local-llama' && managedLocalStatus !== 'ready') return
             const defaults = LLM_DEFAULT_CONFIG[provider]
             updateConfig({
               llm_provider: provider,
@@ -115,8 +142,13 @@ export function LlmPane() {
           className="w-full px-3 py-2.5 bg-bg-secondary border border-border rounded-[10px] text-[13px] text-text-primary outline-none focus:border-border-focus transition-colors"
         >
           {LLM_PROVIDERS.map((p) => (
-            <option key={p.value} value={p.value}>
+            <option
+              key={p.value}
+              value={p.value}
+              disabled={p.value === 'local-llama' && managedLocalStatus !== 'ready'}
+            >
               {p.label}
+              {p.value === 'local-llama' && managedLocalUnavailable ? '（当前安装包不可用）' : ''}
             </option>
           ))}
         </select>
@@ -125,6 +157,14 @@ export function LlmPane() {
       <p className="text-[12px] leading-6 text-text-secondary">
         激活后可使用文字润色、翻译等后处理功能；云端服务的 API 费用由服务商另行结算。
       </p>
+      {isManagedLocal && managedLocalHint && (
+        <p
+          role="status"
+          className="rounded-[9px] border border-border bg-bg-secondary px-3 py-2 text-[12px] text-text-secondary"
+        >
+          {managedLocalHint}
+        </p>
+      )}
 
       {isCloud ? (
         <div className="border border-border rounded-[10px] px-3 py-3 space-y-2">
@@ -235,6 +275,7 @@ export function LlmPane() {
           checked={config.polish_enabled}
           onChange={(checked) => updateConfig({ polish_enabled: checked })}
           label={t('settings.enableAiPolish')}
+          disabled={isManagedLocal && managedLocalStatus !== 'ready'}
         />
         {config.polish_enabled && (
           <FormField label="润色模式 (Polish Mode)">
@@ -255,6 +296,7 @@ export function LlmPane() {
           checked={config.translate_enabled}
           onChange={(checked) => updateConfig({ translate_enabled: checked })}
           label={t('settings.translationMode')}
+          disabled={isManagedLocal && managedLocalStatus !== 'ready'}
         />
         <Toggle
           checked={config.selected_text_enabled}
@@ -299,7 +341,7 @@ function LocalLlamaPanel() {
     try {
       setPaths(await getLocalLlmPaths())
     } catch {
-      setError('完整离线资源未找到，请重新解压完整 ZIP。')
+      setError('此安装包未提供本地文字润色运行时；可选择 Ollama 或自备云服务。')
     }
   }, [])
 
@@ -378,7 +420,7 @@ function LocalLlamaPanel() {
         ) : !paths.default_model_ready ? (
           <>
             <XCircle size={13} className="text-error" />
-            <span className="text-error">完整离线资源缺失，请重新解压完整 ZIP</span>
+            <span className="text-error">本地润色模型缺失，请选择其他服务或安装完整离线包</span>
           </>
         ) : config.polish_enabled ? (
           <>

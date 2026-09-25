@@ -681,6 +681,10 @@ impl PipelineHandle {
         if !self.session_is_active(recording_session) {
             return Ok(());
         }
+        if let Err(error) = crate::runtime_availability::validate(&self.app_handle, &config_data) {
+            let _ = self.set_state_for_session(recording_session, PipelineState::Idle);
+            return Err(anyhow::anyhow!(error));
+        }
         let permit = match self
             .app_handle
             .state::<ActivationService>()

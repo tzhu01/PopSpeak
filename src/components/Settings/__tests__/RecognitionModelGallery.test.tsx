@@ -13,7 +13,7 @@ describe('recognition model gallery', () => {
         availability={{ sensevoice: true, 'whisper-small': false }}
       />,
     )
-    expect(screen.getAllByRole('button')).toHaveLength(12)
+    expect(screen.getAllByRole('button')).toHaveLength(8)
     expect(screen.getByRole('button', { name: /SenseVoice Small/ })).toHaveAttribute(
       'aria-pressed',
       'true',
@@ -26,10 +26,9 @@ describe('recognition model gallery', () => {
     expect(screen.getByRole('button', { name: /Whisper Large v3 Turbo/ })).toHaveTextContent(
       '约 574 MB',
     )
-    expect(screen.getByRole('button', { name: /Qwen3-ASR 1.7B/ })).toHaveTextContent('按需下载')
-    expect(screen.getByRole('button', { name: /Cohere Transcribe/ })).toHaveTextContent('14 种语言')
-    expect(screen.getByRole('button', { name: /Parakeet Unified/ })).toHaveTextContent('英语专用')
-    expect(screen.getByRole('button', { name: /Nemotron 3.5/ })).toHaveTextContent('整段离线识别')
+    expect(
+      screen.queryByRole('button', { name: /Qwen3-ASR|Cohere Transcribe|Parakeet|Nemotron/ }),
+    ).not.toBeInTheDocument()
   })
 
   it('lets users choose the on-demand multilingual variant', () => {
@@ -39,15 +38,24 @@ describe('recognition model gallery', () => {
     expect(onChoose).toHaveBeenCalledWith('whisper-base')
   })
 
-  it.each([
-    ['Qwen3-ASR 1.7B', 'qwen3-asr-1.7b'],
-    ['Cohere Transcribe 03-2026', 'cohere-transcribe-03-2026'],
-    ['Nemotron 3.5 ASR Streaming 0.6B', 'nemotron-3.5-asr-streaming-0.6b'],
-    ['Parakeet Unified EN 0.6B', 'parakeet-unified-en-0.6b'],
-  ])('selects the native backend for %s', (name, id) => {
+  it('disables models whose recognition runtime is absent without hiding them', () => {
     const onChoose = vi.fn()
-    render(<RecognitionModelGallery selected="sensevoice" onChoose={onChoose} />)
-    fireEvent.click(screen.getByRole('button', { name: new RegExp(name) }))
-    expect(onChoose).toHaveBeenCalledExactlyOnceWith(id)
+    render(
+      <RecognitionModelGallery
+        selected="sensevoice"
+        onChoose={onChoose}
+        availability={{ 'whisper-tiny': true }}
+        runtimeIssues={{
+          'whisper-tiny': '本安装包未提供 Whisper 本地识别组件；仅下载模型无法使用。',
+        }}
+      />,
+    )
+    const whisper = screen.getByRole('button', { name: /Whisper Tiny/ })
+    expect(whisper).toBeDisabled()
+    expect(whisper).toHaveTextContent('识别组件缺失')
+    expect(whisper).not.toHaveTextContent('已安装')
+    fireEvent.click(whisper)
+    expect(onChoose).not.toHaveBeenCalled()
+    expect(screen.getByRole('button', { name: /SenseVoice Small/ })).not.toBeDisabled()
   })
 })

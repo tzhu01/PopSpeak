@@ -4,7 +4,7 @@
 
 [Website](https://tzhu01.github.io/PopSpeak/) · [Build from source](BUILD_WINDOWS.md) · [Report an issue](https://github.com/tzhu01/PopSpeak/issues) · [简体中文](README.md)
 
-**Release status:** the source is public, but there is no official Windows installer or portable download yet. Releases labeled "source only" contain source archives, not a runnable Windows app. Before publishing binaries, the project must complete [signing, redistribution checks, and clean-machine testing](docs/OPEN_SOURCE_RELEASE_CHECKLIST.md). See the [Releases page](https://github.com/tzhu01/PopSpeak/releases) for the current status.
+**Check the actual assets and signing status on the [Releases page](https://github.com/tzhu01/PopSpeak/releases).** A "source only" release is not a Windows installer, and an unsigned prerelease installer is not an officially signed build. Older archives are not substitutes for this build. See the [release checklist](docs/OPEN_SOURCE_RELEASE_CHECKLIST.md).
 
 ![PopSpeak's POP text-preview window while recording](site/assets/popspeak-preview.png)
 
@@ -16,16 +16,15 @@
 - **A preview regardless of the final model.** A local side lane revises approximate text while you speak; the selected offline or cloud recognizer produces the final result after recording. `100 ms` is the audio handoff granularity, not a promise of first-text or final-result latency, and not native streaming support in every model.
 - **Offline first.** Default recognition runs on the local CPU. Audio, vocabulary, and history stay on the device; cloud recognition requires an explicit opt-in.
 - **Honest vocabulary support.** Depending on the engine, terms are passed as decoder hints or applied as local post-recognition normalization; the app labels which path is active.
-- **Images to editable text.** Select or drop an image to use locally installed Windows OCR languages, then revise, format, and copy the result. PopSpeak does not upload the image or extracted text to a service.
 - **Reusable history.** Search, copy, edit, and delete past results. Language and dialect quality depend on the chosen model and recording conditions.
 
 ## Try it
 
-1. On **Windows 10/11 x64**, follow the [source-build guide](BUILD_WINDOWS.md). A supported binary download is not yet published. Initial model/runtime preparation requires downloads; normal local recognition does not require a GPU.
+1. On **Windows 10/11 x64**, check [Releases](https://github.com/tzhu01/PopSpeak/releases) for an installer or use the [source-build guide](BUILD_WINDOWS.md). The source build downloads pinned model/runtime assets; normal local recognition does not require a GPU.
 2. Hold `Ctrl+/` to speak. Review the approximate preview, then release the shortcut for the final text.
 3. Edit and copy the result, or choose direct output to the original app. Account-free local trial use is limited to **200 recordings or 20 minutes**, whichever comes first; continuing and advanced local features require activation.
 
-Local options include SenseVoice Small, Fun-ASR-Nano, and Whisper-family models. Optional Doubao and custom cloud providers require your own credentials and may incur provider charges. See [model selection](docs/MODEL_SELECTION_ZH.md) and [privacy](PRIVACY.md) for details.
+The first lean Windows installer bundles **SenseVoice Small only**; Whisper and Fun-ASR-Nano runtimes are absent. Downloads for the four native GGUF models (Qwen3-ASR, Cohere, Nemotron, and Parakeet) are **disabled in this release**. Their adapter source remains for a future release after the applicable model licenses and catalog have been audited. Optional Doubao and custom cloud providers require your own credentials and may incur provider charges. See [model selection](docs/MODEL_SELECTION_ZH.md) and [privacy](PRIVACY.md) for details.
 
 ## Open source
 

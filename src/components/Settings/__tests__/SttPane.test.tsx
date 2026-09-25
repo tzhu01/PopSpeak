@@ -142,12 +142,17 @@ describe('SttPane', () => {
       is_custom: false,
     })
     vi.mocked(tauri.getLocalModelPaths).mockResolvedValue({
+      cli_path: 'D:\\PopSpeak\\runtimes\\whisper\\whisper-cli.exe',
       default_model_ready: true,
       upgrade_model_ready: true,
       small_model_ready: false,
       turbo_model_ready: false,
       small_model_path: 'D:\\PopSpeak\\models\\whisper\\ggml-small-q5_1.bin',
     } as tauri.LocalModelPaths)
+    vi.mocked(tauri.getFunAsrPaths).mockResolvedValue({
+      runtime_ready: true,
+      ready: false,
+    } as tauri.FunAsrPaths)
     vi.mocked(tauri.getNativeAsrCatalog).mockResolvedValue([])
     vi.mocked(tauri.getNativeAsrPaths).mockImplementation(
       async (modelId) =>
@@ -165,29 +170,10 @@ describe('SttPane', () => {
   })
 
   describe('Provider selection', () => {
-    it('selects a supported explicit language for Cohere and English for Parakeet', () => {
-      mockAppStore.config.stt_language = 'yue'
-      render(<SttPane />)
-      fireEvent.click(screen.getByRole('button', { name: /Cohere Transcribe/ }))
-      expect(mockAppStore.updateConfig).toHaveBeenCalledWith({ stt_language: 'zh' })
-      fireEvent.click(screen.getByRole('button', { name: /Parakeet Unified/ }))
-      expect(mockAppStore.updateConfig).toHaveBeenCalledWith({ stt_language: 'en' })
-    })
-
-    it('does not label the Cohere language default as automatic detection', async () => {
-      mockAppStore.config.stt_provider = 'native-asr'
-      mockAppStore.config.native_asr.model_id = 'cohere-transcribe-03-2026'
-      render(<SttPane />)
-      expect(
-        screen.getByRole('option', { name: '中文（默认；此模型不自动检测语言）' }),
-      ).toHaveValue('multi')
-      expect(screen.queryByRole('option', { name: /粤语/ })).not.toBeInTheDocument()
-      expect(screen.getByRole('option', { name: /Greek/ })).toHaveValue('el')
-      await waitFor(() => expect(tauri.getNativeAsrPaths).toHaveBeenCalled())
-    })
     it('keeps an uninstalled requested model selected instead of retaining the previous model', async () => {
       mockAppStore.config.stt_provider = 'sensevoice'
       vi.mocked(tauri.getLocalModelPaths).mockResolvedValue({
+        cli_path: 'D:\\PopSpeak\\runtimes\\whisper\\whisper-cli.exe',
         small_model_ready: false,
         small_model_path: 'D:\\PopSpeak\\models\\whisper\\ggml-small-q5_1.bin',
       } as tauri.LocalModelPaths)
@@ -252,31 +238,51 @@ describe('SttPane', () => {
       expect(mockAppStore.setSttLatencyMs).toHaveBeenCalledWith(null)
     })
 
+    it('disables Whisper and Fun-ASR choices when only their model files are present', async () => {
+      mockAppStore.config.stt_provider = 'sensevoice'
+      vi.mocked(tauri.getLocalModelPaths).mockResolvedValue({
+        cli_path: '',
+        default_model_ready: true,
+        upgrade_model_ready: true,
+      } as tauri.LocalModelPaths)
+      vi.mocked(tauri.getFunAsrPaths).mockResolvedValue({
+        runtime_ready: false,
+        ready: false,
+      } as tauri.FunAsrPaths)
+
+      render(<SttPane />)
+
+      const whisper = screen.getByRole('button', { name: /Whisper Tiny/ })
+      const funAsr = screen.getByRole('button', { name: /Fun-ASR-Nano/ })
+      await waitFor(() => expect(whisper).toBeDisabled())
+      expect(funAsr).toBeDisabled()
+      expect(whisper).toHaveTextContent('识别组件缺失')
+      expect(funAsr).toHaveTextContent('识别组件缺失')
+      fireEvent.click(whisper)
+      fireEvent.click(funAsr)
+      expect(mockAppStore.updateConfig).not.toHaveBeenCalled()
+    })
+
     it('only shows the streamlined recognition choices', () => {
       mockAppStore.config.stt_provider = 'sensevoice'
       render(<SttPane />)
       const gallery = screen.getByRole('region', { name: '语音转文字模型' })
-      expect(gallery.querySelectorAll('button')).toHaveLength(12)
+      expect(gallery.querySelectorAll('button')).toHaveLength(8)
       expect(gallery.textContent).toMatch(/SenseVoice Small/)
       expect(gallery.textContent).toMatch(/Fun-ASR-Nano/)
       expect(gallery.textContent).toMatch(/Whisper Tiny/)
       expect(gallery.textContent).not.toMatch(/Deepgram|AssemblyAI|GLM-ASR|Groq|SiliconFlow/)
     })
 
-    it('checks all four native models and wires a native selection to its real backend', async () => {
+    it('does not offer unreviewed native model downloads in the public installer', async () => {
       mockAppStore.config.stt_provider = 'sensevoice'
       render(<SttPane />)
-      await waitFor(() => expect(tauri.getNativeAsrPaths).toHaveBeenCalledTimes(4))
-      for (const id of tauri.NATIVE_ASR_IDS)
-        expect(tauri.getNativeAsrPaths).toHaveBeenCalledWith(id, '')
-      fireEvent.click(screen.getByRole('button', { name: /Qwen3-ASR 1.7B/ }))
-      expect(mockAppStore.updateConfig).toHaveBeenCalledWith({
-        stt_provider: 'native-asr',
-        stt_api_key: '',
-      })
-      expect(mockAppStore.updateConfig).toHaveBeenCalledWith({
-        native_asr: { model_id: 'qwen3-asr-1.7b', model_dir: '', num_threads: 4 },
-      })
+      await waitFor(() => expect(tauri.getSenseVoicePaths).toHaveBeenCalled())
+      expect(tauri.getNativeAsrPaths).not.toHaveBeenCalled()
+      expect(
+        screen.queryByRole('button', { name: /Qwen3-ASR|Cohere Transcribe|Nemotron|Parakeet/ }),
+      ).not.toBeInTheDocument()
+      expect(screen.queryByText(/按需下载，音频不会上传/)).not.toBeInTheDocument()
     })
 
     it('selects the official SeedASR 2.0 endpoint and duration resource', () => {

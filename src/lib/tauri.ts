@@ -60,10 +60,6 @@ import type {
 } from '../stores/appStore'
 
 // Pipeline commands
-export async function recognizeImage(path: string): Promise<string> {
-  return invoke('recognize_image', { path })
-}
-
 export async function startRecording(): Promise<void> {
   return invoke('start_recording')
 }

@@ -336,6 +336,13 @@ impl AppConfig {
             // Migrate an old saved choice to the same safe offline default shown in Settings.
             self.stt_provider = "sensevoice".to_string();
         }
+        if self.stt_provider == "native-asr"
+            && !crate::stt::native_asr_manager::PUBLIC_CATALOG_ENABLED
+        {
+            // Existing installations can keep their downloaded files, but a
+            // public installer must not resume a model pending license review.
+            self.stt_provider = "sensevoice".to_string();
+        }
         if !matches!(
             self.llm_provider.as_str(),
             "local-llama" | "ollama" | "openrouter" | "cloud"
@@ -1456,6 +1463,16 @@ mod tests {
         assert_eq!(config.stt_provider, "sensevoice");
         assert_eq!(config.llm_provider, "local-llama");
         assert_eq!(config.llm_api_key, "test-secret");
+    }
+
+    #[test]
+    fn saved_native_asr_selection_migrates_to_safe_offline_default() {
+        let mut config = AppConfig {
+            stt_provider: "native-asr".into(),
+            ..AppConfig::default()
+        };
+        config.normalize_managed_local_resources();
+        assert_eq!(config.stt_provider, "sensevoice");
     }
 
     #[test]

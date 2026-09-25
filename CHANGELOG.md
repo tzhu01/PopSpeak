@@ -4,14 +4,21 @@ This file records PopSpeak source milestones. A source-only GitHub Release conta
 source archives, not an official Windows installer or portable app. See the
 [release policy](docs/RELEASE_AND_BRANCHES_ZH.md).
 
-## Unreleased
+## 0.4.4 — 2026-09-25 (Windows installer candidate)
+
+- Removed the experimental image-to-text feature and its Windows OCR dependency.
+- Added a reproducible, SenseVoice-only Windows NSIS build with the offline
+  WebView2 installer, pinned model/runtime hashes, and a packaged-asset manifest.
+- Kept unavailable offline engines visible but disabled, and blocked unaudited
+  optional GGUF model downloads in this public build.
+- Updated Windows dependency auditing and release checks. The local installer is
+  unsigned; a signed stable release requires a signing certificate and separate
+  installed-app verification.
 
 ## 0.4.3 — 2026-09-25 (source-only; no Windows binary)
 
-- Added local image-to-text recognition using installed Windows OCR language packs.
-  Images can be selected or dropped into the app; results can be edited, formatted,
-  and copied. Uncopied edits are guarded before replacement or navigation, and
-  imported images are not uploaded to a PopSpeak service or added to voice history.
+- Added local Windows image-to-text recognition with editable and copyable results;
+  this feature was removed in the subsequent 0.4.4 candidate.
 - Simplified the public README into a Chinese-first product introduction with an
   English counterpart and an explicit Windows binary-release status.
 - Documented a single-long-lived-branch strategy and the signed-release gate.

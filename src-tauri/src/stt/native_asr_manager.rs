@@ -15,6 +15,18 @@ use tokio::io::AsyncWriteExt;
 const RECEIPT: &str = ".popspeak-native-asr.json";
 const MAX_ATTEMPTS: u32 = 2;
 
+// Public installers must not offer these opt-in downloads until every model's
+// upstream terms, required notices, and pinned catalog sources are audited.
+// Keep the adapter and catalog source intact for a later reviewed release.
+pub const PUBLIC_CATALOG_ENABLED: bool = false;
+pub const PUBLIC_CATALOG_NOTICE: &str =
+    "原生 GGUF 模型仍在许可与下载源审核中，本公开版本暂不提供选择或下载。请选择 SenseVoice 或云端识别。";
+
+pub fn require_public_catalog() -> Result<()> {
+    anyhow::ensure!(PUBLIC_CATALOG_ENABLED, PUBLIC_CATALOG_NOTICE);
+    Ok(())
+}
+
 #[derive(Debug, Clone, Serialize)]
 pub struct NativeAsrSource {
     pub name: String,
@@ -335,6 +347,7 @@ pub async fn download_model(
     model_id: String,
     custom_dir: Option<String>,
 ) -> Result<NativeAsrPaths> {
+    require_public_catalog()?;
     let model = model_info(&model_id)?;
     let cancelled = Arc::new(AtomicBool::new(false));
     {
@@ -624,6 +637,14 @@ pub async fn delete_model(
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn public_release_blocks_unaudited_native_downloads() {
+        assert!(!PUBLIC_CATALOG_ENABLED);
+        assert!(require_public_catalog()
+            .unwrap_err()
+            .to_string()
+            .contains("许可与下载源审核"));
+    }
     #[test]
     fn catalog_has_four_pinned_models_and_three_distinct_source_platforms() {
         let items = catalog();

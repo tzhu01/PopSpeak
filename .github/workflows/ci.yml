@@ -72,7 +72,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      checks: write
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
@@ -87,8 +86,12 @@ jobs:
 
       - run: npm audit --omit=dev --audit-level=high --registry=https://registry.npmjs.org
 
-      - name: Rust dependency audit
-        uses: rustsec/audit-check@69366f33c96575abad1ee0dba8212993eecbe998 # v2.0.0
+      - uses: dtolnay/rust-toolchain@4360b52568e2003a75bf9bc1d59f33a8e3fc893c # stable 2026-08-28
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          working-directory: src-tauri
+          toolchain: 1.97.0
+
+      - name: Install pinned cargo-deny
+        run: cargo install cargo-deny --version 0.20.2 --locked
+
+      - name: Audit Windows Rust dependency graph
+        run: cargo deny --config deny.toml --manifest-path src-tauri/Cargo.toml --locked check advisories
