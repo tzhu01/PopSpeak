@@ -79,6 +79,7 @@ img { display: block; max-width: 100%; }
 .hero h1 em { color: var(--coral); font-style: normal; }
 .hero-lede { max-width: 620px; margin: 0; color: var(--ink-soft); font-size: clamp(1.05rem, 1.35vw, 1.22rem); line-height: 1.85; }
 .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+.hero-release-note { margin: 12px 0 0; color: var(--ink-soft); font-size: .82rem; line-height: 1.6; }
 .button { min-height: 50px; display: inline-flex; align-items: center; justify-content: center; gap: 12px; padding: 0 22px; border-radius: 999px; font-weight: 780; transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease; }
 .button:hover { transform: translateY(-3px); }
 .button-primary { color: white; background: var(--coral-dark); box-shadow: 0 12px 26px rgba(216, 61, 45, 0.24); }

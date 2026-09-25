@@ -585,7 +585,15 @@ describe('SttPane', () => {
       vi.mocked(tauri.openSenseVoiceModelDirectory).mockResolvedValue()
 
       render(<SttPane />)
+      const summary = screen.getByText(/模型管理与高级设置/)
+      const advancedSettings = summary.closest('details')
+      expect(advancedSettings).not.toBeNull()
+      if (!advancedSettings?.open) {
+        fireEvent.click(summary)
+      }
+      expect(advancedSettings).toHaveAttribute('open')
       const button = await screen.findByRole('button', { name: '打开目录' })
+      await waitFor(() => expect(button).toBeEnabled())
       fireEvent.click(button)
 
       await waitFor(() => {

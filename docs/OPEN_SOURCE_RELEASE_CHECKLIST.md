@@ -44,8 +44,10 @@ or portable binary is ready to publish.
 - [ ] Record immutable upstream revision, filename, size and SHA-256 for every
       downloaded artifact and source archive.
 - [ ] Generate dependency license inventories and an SPDX/CycloneDX SBOM.
-- [ ] Resolve every item in `docs/OPEN_SOURCE_BLOCKERS.md` before publishing a
-      binary distribution.
+- [ ] Resolve known redistribution blockers before publishing a binary. In
+      particular, verify whether every shipped `libomp` DLL may be redistributed;
+      the current Windows portable snapshot fails
+      `scripts/assert-redistributable-runtime.ps1`.
 
 ## Release integrity
 

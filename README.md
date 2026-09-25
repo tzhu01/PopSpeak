@@ -1,129 +1,33 @@
 # PopSpeak
 
-[中文说明](README_zh.md)
+> 先说出来，看清再发送。PopSpeak 是一款开源、离线优先的 Windows 语音输入助手。
 
-[Product website](https://tzhu01.github.io/PopSpeak/) · [Issue tracker](https://github.com/tzhu01/PopSpeak/issues)
+[产品官网](https://tzhu01.github.io/PopSpeak/) · [使用与构建](BUILD_WINDOWS.md) · [反馈问题](https://github.com/tzhu01/PopSpeak/issues) · [English](README_EN.md)
 
-Current release: **0.4.2**. The offline trial includes 200 recordings or 20 minutes total, whichever is reached first. Existing usage and installation-bound activation are preserved when upgrading. See [trial migration rules](docs/TRIAL_QUOTA_200_20_MINUTES_ZH.md), the [current 0.4.2 PRD entry point](docs/PRD_ZH.md), and [cloud verification boundaries](docs/CLOUD_STT_INTEGRATION_ZH.md). The consumer package contains only an activation public key; keep the operator signing key outside this repository.
+**当前状态：源码已公开，Windows 安装包和便携包尚未正式发布。** [Releases 页面](https://github.com/tzhu01/PopSpeak/releases)目前没有可供下载的官方版本；发布前还需要完成 [签名、依赖许可和实机验收](docs/OPEN_SOURCE_RELEASE_CHECKLIST.md)。请勿把其他渠道的旧压缩包当作官方发行版。
 
-PopSpeak is an open-source voice input assistant for Windows. While you hold the
-global hotkey, an independent POP result window can show local approximate text;
-after release, the selected engine produces the final transcript. Review, format,
-and copy it first—or send it directly to the app you were using. The default path
-runs entirely on the local CPU—no account, API key, GPU, or network connection is
-required.
+![PopSpeak 录音时的 POP 文字预览窗](site/assets/popspeak-preview.png)
 
-## Product principles
+*录音时先看近似预览；结束后由所选识别模型生成最终文本。上图为产品界面示意。*
 
-- **Immediate capture:** microphone recording starts before the recognizer is
-  prepared, and a pre-roll buffer keeps the first words.
-- **Chinese first:** SenseVoice INT8 is the default engine; Fun-ASR-Nano GGUF is
-  available as a higher-accuracy Chinese mode. Whisper tiny is the local fallback.
-- **CPU only:** SenseVoice, Fun-ASR, Whisper and the optional local Qwen polisher are all
-  explicitly launched without GPU layers.
-- **Private by default:** transcription, professional vocabulary, corrections and
-  history stay on the device. Cloud providers are optional and disabled by default.
-- **Vocabulary that matches engine capability:** Fun-ASR-Nano and Local Whisper
-  receive decoder hints; other recognizers apply local spelling normalization. A
-  recurring wrong form or pronunciation is an optional, separate correction rule.
+## 为什么做 PopSpeak
 
-## Current platform
+- **先预览，后落笔。** 独立 POP 结果窗支持检查、编辑、排版、复制和置顶；在聊天框、文档或代码窗口中，不必为了改一句话反复回退。
+- **边说边看。** 本地辅路持续给出近似文字，所选本地或云端模型在录音结束后提供最终稿。`100 ms` 指预览音频分流粒度，**不是**首次出字或最终识别延迟，也不表示所有模型原生流式。
+- **离线优先。** 默认识别在本机 CPU 运行，音频、专业词和历史记录留在设备上；云端识别是用户主动配置的可选项。
+- **专业词有能力说明。** 根据当前引擎，词汇可作为解码提示或用于本地识别后规范化；界面会说明具体方式，不把文字替换冒充模型热词。
+- **结果找得回。** 历史记录支持搜索、复制、编辑和逐条删除；多语种、方言效果取决于所选模型与录音环境。
 
-- Windows 10/11 x64
-- CPU inference; no CUDA, DirectML or discrete GPU required
-- Default hotkey: hold `Ctrl+/`, speak, then release
-- Default output: clipboard paste with clipboard restoration
+## 三步使用
 
-The project is intentionally Windows-only today. Other platforms are not claimed or
-packaged until their global input, permissions and runtime behavior are tested.
+1. 在 **Windows 10/11 x64** 上按 [构建说明](BUILD_WINDOWS.md)从源码运行；正式安装包仍在准备中。无需独立显卡，初次准备模型与运行时需要下载。
+2. 默认按住 `Ctrl+/` 说话，POP 窗先显示近似预览，松开后等待最终结果。
+3. 在结果窗校对、编辑并复制，或选用直接输出到原应用。离线功能可免登录试用累计 **200 次或 20 分钟**（先到为准）；继续使用与高级本地功能需要激活。
 
-## Core features
+本地可选 SenseVoice Small、Fun-ASR-Nano 和 Whisper 系列模型；豆包与自定义云端接口需要你自己的服务商账号与凭证，相关费用由服务商决定。模型语言、体积与热词能力见 [模型说明](docs/MODEL_SELECTION_ZH.md)。默认离线识别不会上传音频；更多数据边界见 [隐私说明](PRIVACY.md)。
 
-- SenseVoice INT8 recognizer cached and pre-warmed once per process
-- Whisper tiny offline fallback and optional base-model upgrade
-- Fun-ASR-Nano encoder F16 + Qwen3 Q4_K_M with automatic AVX2/generic x64 selection
-- Microphone selection, continuous 16 kHz resampling, noise gate and VAD pre-roll
-- Provider-independent local live preview: a non-blocking 100 ms PCM side lane
-  refreshes approximate text while the selected engine produces the final result
-- Professional vocabulary with decoder/post-processing capability labels, plus
-  optional exact-alias and same-pinyin correction
-- A result editor with copy automation, persistent layout options, topmost control,
-  language display, history saving, and correction learning
-- Account-free local scene presets for daily typing, chat, and meeting notes
-- Hold/toggle recording modes, maximum-recording guard and visible error states
-- Safe output to arbitrary apps, with focus-change detection and copy-only fallback
-- Local SQLite history, searchable transcript recovery and crash journal
-- Optional local Qwen 0.5B polishing through an isolated CPU llama.cpp runtime
-- Dedicated cloud credentials and new custom-vendor credentials persist in local settings in plaintext; do not share personal settings files
+## 参与开源
 
-## Privacy and networking
+PopSpeak 自有源码采用 [MIT 许可证](LICENSE)，可使用、修改和分发，包括商业使用。第三方模型、运行时和品牌各有独立边界，见 [第三方声明](THIRD_PARTY_NOTICES.md)与[许可说明](docs/LICENSING.md)。
 
-With the default configuration, voice recognition never makes a network request.
-Network access occurs only when the user explicitly downloads an optional model,
-checks for an update, or configures a cloud/BYOK provider. Local AI polishing is off
-by default so the primary voice-keyboard path stays fast on ordinary CPUs.
-
-## Development
-
-Prerequisites: Node.js 20+, stable Rust, and Visual Studio 2022 Build Tools with
-Desktop development with C++ and a Windows SDK.
-
-```powershell
-npm ci
-./scripts/fetch-whisper.ps1
-./scripts/fetch-llama-server.ps1
-./scripts/fetch-sensevoice.ps1
-./scripts/fetch-funasr-nano.ps1
-npm run tauri dev
-```
-
-The preparation scripts use pinned upstream releases and verify SHA-256 digests.
-Generated models, native runtimes and build output are intentionally ignored by Git.
-
-Quality gate:
-
-```powershell
-npm test
-npm run lint
-npm run format:check
-npm run build
-cargo fmt --manifest-path src-tauri/Cargo.toml -- --check
-cargo clippy --manifest-path src-tauri/Cargo.toml -- -D warnings
-cargo test --manifest-path src-tauri/Cargo.toml
-```
-
-See [BUILD_WINDOWS.md](BUILD_WINDOWS.md) for installer/portable packaging and
-[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the directory map and product flow.
-The Chinese product/market plan is in
-[docs/PRODUCT_STRATEGY_ZH.md](docs/PRODUCT_STRATEGY_ZH.md).
-
-## Distribution notes
-
-The release workflow creates a draft Windows NSIS release and a SHA-256-manifested
-portable ZIP. Authenticode is a hard public-release gate: missing CI secrets or any
-invalid executable signature fails the job. Private keys are never committed.
-
-Third-party runtimes and models have their own licenses and attribution requirements.
-See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
-Privacy/storage behavior is documented in [PRIVACY.md](PRIVACY.md). Maintainers
-must complete the [open-source release checklist](docs/OPEN_SOURCE_RELEASE_CHECKLIST.md)
-and resolve its linked blockers before publishing a binary. The read-only
-[source snapshot audit](docs/SOURCE_RELEASE_AUDIT.md) checks common accidental
-artifacts in tracked and untracked non-ignored files, but it does not replace a
-complete Git-history scan.
-
-## License
-
-PopSpeak's original source code is released under the
-[MIT License](LICENSE), SPDX identifier [`MIT`](https://spdx.org/licenses/MIT.html).
-MIT is an [OSI-approved open-source license](https://opensource.org/license/mit):
-subject to retaining its copyright and permission notice, it permits use, copy,
-modification, distribution, sublicensing and sale, including commercial use.
-
-Third-party code, native runtimes and model weights keep their own licenses; see
-[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). The source-code license is
-separate from PopSpeak names, logos and official signed binaries. A fork or
-self-built package is allowed by MIT, but must not be represented as an official
-PopSpeak release; see [the licensing boundary](docs/LICENSING.md) and
-[TRADEMARKS.md](TRADEMARKS.md). References to OSI approval describe the license
-only and do not imply endorsement by OSI.
+发现问题请提交 [Issue](https://github.com/tzhu01/PopSpeak/issues)；开发者可阅读 [贡献指南](CONTRIBUTING.md)和[分支与发布流程](docs/RELEASE_AND_BRANCHES_ZH.md)。当前 `main` 是唯一长期分支，网站也由它自动部署，不需要另建 `gh-pages` 分支。

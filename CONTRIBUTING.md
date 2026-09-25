@@ -21,11 +21,16 @@ Thanks for your interest in contributing! This guide covers everything you need 
 ## Making Changes
 
 1. Fork the repository
-2. Create a feature branch: `git checkout -b feat/my-feature`
+2. Create a short-lived branch such as `feat/my-feature`, `fix/my-bug`, or `docs/readme`
 3. Make your changes
 4. Run the pre-submit checklist (see below)
 5. Commit with a descriptive message following [Conventional Commits](https://www.conventionalcommits.org/)
 6. Open a pull request against `main`
+
+`main` is the only long-lived branch. GitHub Pages also deploys from `main`, so
+there is no separate `develop` or `gh-pages` branch. Please delete your topic
+branch after its PR is merged. Maintainers use `vX.Y.Z` tags only for a verified
+release; see the [branch and release policy](docs/RELEASE_AND_BRANCHES_ZH.md).
 
 ## Pre-Submit Checklist
 

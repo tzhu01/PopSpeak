@@ -2,19 +2,22 @@
 
 ## 先说结论
 
-当前公开包默认使用 **SenseVoice Small INT8 + 本地专业词汇纠错**。Fun-ASR-Nano GGUF
+当前开发构建默认使用 **SenseVoice Small INT8 + 本地专业词汇纠错**。Fun-ASR-Nano GGUF
 已经作为可切换的“中文准确模式”接入；Whisper tiny/base 是兼容回退；
 Qwen2.5-0.5B-Instruct 只做可选文字润色，默认关闭。
 
-## 当前完整离线包里有什么
+本页描述源码中的模型方案，不代表已有可下载的官方二进制包；正式 Windows Release
+仍需通过签名、依赖再分发许可和干净系统验收。
+
+## 当前开发便携构建中的模型
 
 | 模型 | 角色 | 当前状态 | 默认策略 |
 | --- | --- | --- | --- |
-| SenseVoice Small INT8 | 音频 → 文字 | 已接入、已随包 | 默认 ASR |
-| Fun-ASR-Nano GGUF Q5_K_M | 音频 → 文字 | 已接入、已随包 | 中文准确模式 |
-| Whisper tiny | 音频 → 文字 | 已接入、已随包 | 极速回退 |
-| Whisper base | 音频 → 文字 | 已接入、已随包 | 准确回退 |
-| Qwen2.5-0.5B-Instruct Q4_K_M | 文字 → 润色文字 | 已接入、已随包 | 默认关闭 |
+| SenseVoice Small INT8 | 音频 → 文字 | 开发构建已接入 | 默认 ASR |
+| Fun-ASR-Nano GGUF Q5_K_M | 音频 → 文字 | 开发构建已接入 | 中文准确模式 |
+| Whisper tiny | 音频 → 文字 | 开发构建已接入 | 极速回退 |
+| Whisper base | 音频 → 文字 | 开发构建已接入 | 准确回退 |
+| Qwen2.5-0.5B-Instruct Q4_K_M | 文字 → 润色文字 | 开发构建已接入 | 默认关闭 |
 | Qwen3-ASR-0.6B | 音频 → 文字 | 尚未接入 | 方言候选 |
 
 包内 `models/catalog.json` 是机器可读清单，记录模型文件、角色、量化、CPU 参数、大小和

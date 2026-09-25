@@ -4,6 +4,7 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    open-pull-requests-limit: 3
     groups:
       production:
         patterns: ["*"]
@@ -15,8 +16,16 @@ updates:
     directory: /src-tauri
     schedule:
       interval: weekly
+    open-pull-requests-limit: 3
+    groups:
+      routine:
+        patterns: ["*"]
 
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: weekly
+    open-pull-requests-limit: 3
+    groups:
+      actions:
+        patterns: ["*"]
