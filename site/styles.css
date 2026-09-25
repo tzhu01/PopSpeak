@@ -205,6 +205,8 @@ img { display: block; max-width: 100%; }
 .product-shot { position: relative; margin: 0; padding: 14px; background: rgba(255,255,255,.78); border: 1px solid var(--line); border-radius: 25px; box-shadow: var(--shadow); }
 .product-shot img { width: 100%; border-radius: 14px; }
 .product-shot figcaption { position: absolute; left: 28px; bottom: 26px; padding: 7px 11px; color: white; background: rgba(18,24,39,.82); border-radius: 999px; backdrop-filter: blur(8px); font-size: .75rem; }
+.product-shot-editor { width: 100%; max-width: 520px; justify-self: center; }
+.product-shot-editor figcaption { position: static; margin: 10px 6px 2px; padding: 0; color: var(--ink-soft); background: none; backdrop-filter: none; }
 
 .models-section { padding: 130px 0; background: #fff; border-block: 1px solid var(--line); }
 .split-heading { max-width: none; display: grid; grid-template-columns: 1fr .6fr; gap: 80px; align-items: end; }

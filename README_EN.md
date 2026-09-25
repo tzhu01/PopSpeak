@@ -8,7 +8,7 @@
 
 ![PopSpeak's POP text-preview window while recording](site/assets/popspeak-preview.png)
 
-*An approximate local preview appears while recording; the selected recognizer supplies the final transcript afterward. UI illustration.*
+*An actual POP-window recording preview. It can be revised while you speak; the selected recognizer supplies the final transcript afterward.*
 
 ## What makes it different
 
