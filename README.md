@@ -8,7 +8,7 @@
 
 ![PopSpeak 录音时的 POP 文字预览窗](site/assets/popspeak-preview.png)
 
-*录音时先看近似预览；结束后由所选识别模型生成最终文本。上图为产品界面示意。*
+*实机录音中的 POP 文字预览。预览允许修订；结束后由所选识别模型生成最终文本。*
 
 ## 为什么做 PopSpeak
 
